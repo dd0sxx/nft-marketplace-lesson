@@ -3,7 +3,7 @@ const { expect } = require("chai")
 describe("TigerNFT contract", function () {
 
     let tiger
-    let owner
+    let deployer
     let artist
     let alice
     let bob
@@ -12,7 +12,7 @@ describe("TigerNFT contract", function () {
     const logger = ethers.utils.Logger.globalLogger()
     
     beforeEach(async function () {
-        ;[owner, artist, alice, bob, ...addrs] = await ethers.getSigners()
+        ;[deployer, artist, alice, bob, ...addrs] = await ethers.getSigners()
         tigerFactory = await ethers.getContractFactory("TigerNFT")
         tiger = await tigerFactory.deploy(artist.address)
         await tiger.deployed()
@@ -73,25 +73,36 @@ describe("TigerNFT contract", function () {
     })
 
     it("sellers can withdraw funds", async function () {
-        //artist sells to bob who then sells to alice
+        //artist sells to bob for 1 ether, who then sells to alice for 15 ether
         await tiger.connect(artist).putUpForSale(13, ethers.utils.parseEther("1"))
         await tiger.connect(bob).buyTiger(13, {value:ethers.utils.parseEther("1")})
         await tiger.connect(bob).putUpForSale(13, ethers.utils.parseEther("15"))
         await tiger.connect(alice).buyTiger(13, {value:ethers.utils.parseEther("15")})
 
-        //artist withdraws their funds from the sale
+        //artist withdraws their funds from the sale, should be 1.74 ether minus gas cost of withdrawal
+        //calculated as 1 ether from initial sale minus 1% contract royalty, plus 0.75 ether from 5% artist
+        //royalty on second sale
         let initialBalance = await ethers.provider.getBalance(artist.address)
         await tiger.connect(artist).withdrawFunds()
         let finalBalance = await ethers.provider.getBalance(artist.address)
         let difference = finalBalance.sub(initialBalance)
-        expect(difference).to.be.closeTo(ethers.utils.parseEther("1"), ethers.utils.parseEther("0.04"))
+        expect(difference).to.be.closeTo(ethers.utils.parseEther("1.74"), ethers.utils.parseEther("0.04"))
 
-        //bob withdraws his funds from the sale
+        //bob withdraws his funds from the sale, should be 14.1 ether minus gas cost of withdrawal
+        //calculated as 15 ether sale price minus 1% contract royalty and 5% artist royalty
         initialBalance = await ethers.provider.getBalance(bob.address)
         await tiger.connect(bob).withdrawFunds()
         finalBalance = await ethers.provider.getBalance(bob.address)
         difference = finalBalance.sub(initialBalance)
-        expect(difference).to.be.closeTo(ethers.utils.parseEther("15"), ethers.utils.parseEther("0.04"))
+        expect(difference).to.be.closeTo(ethers.utils.parseEther("14.1"), ethers.utils.parseEther("0.04"))
+
+        //contract deployer withdraws their funds from the sale, should be 0.16 ether minus gas cost of withdrawal
+        //calculated as 1% contract royalty on 16 ether of total sales
+        initialBalance = await ethers.provider.getBalance(deployer.address)
+        await tiger.connect(deployer).withdrawFunds()
+        finalBalance = await ethers.provider.getBalance(deployer.address)
+        difference = finalBalance.sub(initialBalance)
+        expect(difference).to.be.closeTo(ethers.utils.parseEther("0.16"), ethers.utils.parseEther("0.04"))
     })
 
 })

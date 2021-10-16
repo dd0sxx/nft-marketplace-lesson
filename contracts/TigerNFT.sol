@@ -91,7 +91,11 @@ contract TigerNFT {
         require(saleOffer.seller == getOwner(tigerIndex), "seller no longer owns");
         tigerOwners[tigerIndex] = msg.sender;
         tigersForSale[tigerIndex] = SaleOffer(false, address(0), 0, address(0));
-        pendingWithdrawals[saleOffer.seller] += msg.value;
+        uint contractRoyalty = msg.value / 100;
+        pendingWithdrawals[deployer] += contractRoyalty;
+        uint artistRoyalty = msg.value / 20;
+        pendingWithdrawals[artist] += artistRoyalty;
+        pendingWithdrawals[saleOffer.seller] += msg.value - (contractRoyalty + artistRoyalty);
     }
 
     // allow participant to withdraw accumulated funds
