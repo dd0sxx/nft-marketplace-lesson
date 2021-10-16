@@ -17,9 +17,15 @@ Goals for the students are as follows
  
 ### Contracts
 
-1. A basic NFT contract along the lines of CryptoZombies (see https://github.com/larvalabs/cryptopunks/blob/master/contracts/CryptoPunksMarket.sol ) that is a starting point for the students to modify.
+1. _TigerBasicNFT.sol_ 
 
-2. A complete NFT contract which is contract 1 above, but extended to charge royalties on sales, 5% to the artist and 1% to the contract owner, and also to allow participants to withdraw their funds.
+  A basic NFT contract along the lines of CryptoZombies (see https://github.com/larvalabs/cryptopunks/blob/master/contracts/CryptoPunksMarket.sol ) that is a starting point for the students to modify.
 
-3. A version of the complete contract with bugs for the students to find.
+2. _TigerNFT.sol_ 
+  
+  A complete NFT contract which is contract 1 above, but extended to charge royalties on sales, 5% to the artist and 1% to the contract owner, and also to allow participants to withdraw their funds.
+
+3. _TigerBuggyNFT.sol_
+
+  A version of the complete contract with bugs for the students to find.
  
