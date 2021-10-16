@@ -72,4 +72,22 @@ describe("TigerNFT contract", function () {
         await expect(tiger.connect(bob).buyTiger(13, {value:ethers.utils.parseEther("1")})).to.be.revertedWith("not for sale")
     })
 
+    it("sellers can withdraw funds", async function () {
+        await tiger.connect(artist).putUpForSale(13, ethers.utils.parseEther("1"))
+        await tiger.connect(bob).buyTiger(13, {value:ethers.utils.parseEther("1")})
+        await tiger.connect(bob).putUpForSale(13, ethers.utils.parseEther("15"))
+        await tiger.connect(alice).buyTiger(13, {value:ethers.utils.parseEther("15")})
+        let initialBalance = await ethers.provider.getBalance(artist.address)
+        await tiger.connect(artist).withdrawFunds()
+        let finalBalance = await ethers.provider.getBalance(artist.address)
+        let difference = finalBalance.sub(initialBalance)
+        expect(difference).to.be.closeTo(ethers.utils.parseEther("1"), ethers.utils.parseEther("0.04"))
+        await tiger.connect(artist).withdrawFunds()
+        initialBalance = await ethers.provider.getBalance(bob.address)
+        await tiger.connect(bob).withdrawFunds()
+        finalBalance = await ethers.provider.getBalance(bob.address)
+        difference = finalBalance.sub(initialBalance)
+        expect(difference).to.be.closeTo(ethers.utils.parseEther("15"), ethers.utils.parseEther("0.04"))
+    })
+
 })

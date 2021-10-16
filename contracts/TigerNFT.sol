@@ -97,8 +97,11 @@ contract TigerNFT {
     // allow participant to withdraw accumulated funds
     function withdrawFunds() external {
         uint amount = pendingWithdrawals[msg.sender];
-        pendingWithdrawals[msg.sender] = 0;
-        payable(msg.sender).transfer(amount);
+        if (amount > 1e10) {
+            pendingWithdrawals[msg.sender] = 0;
+            (bool sent, ) = payable(msg.sender).call{value:amount}("");
+            require(sent, "transfer failed");
+        }
     }
 
     
