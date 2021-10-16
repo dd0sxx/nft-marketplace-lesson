@@ -27,5 +27,5 @@ Goals for the students are as follows
 
 3. _TigerBuggyNFT.sol_
 
-  A version of the complete contract with bugs for the students to find.
+  A version of the complete contract with bugs and vulnerabilities for the students to find.
  
