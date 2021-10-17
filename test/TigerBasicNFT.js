@@ -3,7 +3,7 @@ const { expect } = require("chai")
 describe("TigerBasicNFT contract", function () {
 
     let tiger
-    let owner
+    let deployer
     let artist
     let alice
     let bob
@@ -12,8 +12,8 @@ describe("TigerBasicNFT contract", function () {
     const logger = ethers.utils.Logger.globalLogger()
     
     beforeEach(async function () {
-        ;[owner, artist, alice, bob, ...addrs] = await ethers.getSigners()
-        tigerFactory = await ethers.getContractFactory("TigerBasicNFT")
+        ;[deployer, artist, alice, bob, ...addrs] = await ethers.getSigners()
+        tigerFactory = await ethers.getContractFactory("TigerNFT")
         tiger = await tigerFactory.deploy(artist.address)
         await tiger.deployed()
     })
