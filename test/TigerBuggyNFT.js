@@ -13,17 +13,17 @@ describe("TigerBuggyNFT contract", function () {
     
     beforeEach(async function () {
         ;[deployer, artist, alice, bob, ...addrs] = await ethers.getSigners()
-        tigerFactory = await ethers.getContractFactory("TigerNFT")
+        tigerFactory = await ethers.getContractFactory("TigerBuggyNFT")
         tiger = await tigerFactory.deploy(artist.address)
         await tiger.deployed()
     })
 
     it("artist should be initial owner", async function () {
-        expect(await tiger.getOwner(0)).to.equal(artist.address)
-        expect(await tiger.getOwner(999)).to.equal(artist.address)
+        expect(await tiger.tigerOwners(0)).to.equal(artist.address)
+        expect(await tiger.tigerOwners(999)).to.equal(artist.address)
     })
 
-    it("iniitally nothing should be for sale", async function () {
+    it("initially nothing should be for sale", async function () {
         forSale = await tiger.isForSale(0)
         expect(forSale[0]).to.equal(false)
         expect(forSale[1]).to.equal(ethers.utils.parseEther("0"))
@@ -52,8 +52,14 @@ describe("TigerBuggyNFT contract", function () {
     it("someone can buy a tiger that is for sale", async function () {
         await tiger.connect(artist).putUpForSale(13, ethers.utils.parseEther("1"))
         await tiger.connect(bob).buyTiger(13, {value:ethers.utils.parseEther("1")})
-        expect((await tiger.isForSale(13))[0]).to.equal(false)
-        expect(await tiger.connect(alice).getOwner(13)).to.equal(bob.address)
+        expect(await tiger.connect(alice).tigerOwners(13)).to.equal(bob.address)
+    })
+
+    it("tiger should show as no longer for sale after it's been bought", async function () {
+        await tiger.connect(artist).putUpForSale(389, ethers.utils.parseEther("1"))
+        await tiger.connect(bob).buyTiger(389, {value:ethers.utils.parseEther("1")})
+        expect((await tiger.isForSale(389))[0]).to.equal(false)
+        expect(await tiger.connect(alice).tigerOwners(389)).to.equal(bob.address)
     })
 
     it("can't buy a tiger that is not for sale", async function () {
@@ -64,7 +70,7 @@ describe("TigerBuggyNFT contract", function () {
         await tiger.connect(artist).putUpForSaleToAddress(13, ethers.utils.parseEther("1"), bob.address)
         await tiger.connect(bob).buyTiger(13, {value:ethers.utils.parseEther("1")})
         expect((await tiger.isForSale(13))[0]).to.equal(false)
-        expect(await tiger.connect(alice).getOwner(13)).to.equal(bob.address)
+        expect(await tiger.connect(alice).tigerOwners(13)).to.equal(bob.address)
     })
 
     it("can't buy a tiger that is for sale only to someone else", async function () {
