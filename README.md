@@ -1,6 +1,4 @@
-# week-long-nft-project
-
-## NFT Contracts for week long Project
+# NFT Contracts for week long Project
 
 ### Context
 This is a project that experienced engineers will opt-into doing after getting initial exposure and experience to Web3. They will be engineers who have now seen what all this hype is about, and want to write some Solidity / understand the technical architecture differences between Web2 and Web3.
