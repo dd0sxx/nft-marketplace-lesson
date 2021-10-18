@@ -33,7 +33,15 @@ This project is designed for experienced software engineers who are in the early
       - https://solidity-by-example.org/ (at least one of the defects in TigerBuggyNFT is described in the Hacks section here)
       - https://hardhat.org/tutorial/
       
- - When debugging contract code the HardHat console logging facility may help. At the top of the contract, after the line `pragma solidity 0.8.2;` add the line `import "hardhat/console.sol";`. You can then print debug output from your test runs like this: 
+ - When debugging contract code the HardHat console logging facility may help. At the top of the contract, after the line 
+ ```
+ pragma solidity 0.8.2;
+ ``` 
+ add the line 
+ ```
+ import "hardhat/console.sol";
+ ```
+ You can then print debug output from your test runs like this: 
  ```
      constructor(address _artist) {
         deployer = msg.sender;
