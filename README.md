@@ -19,19 +19,24 @@ This project is designed for experienced software engineers who are in the early
         - Extend the contract to automatically deduct a 1% service fee from all token sales and make this available for transfer to the adddress from which the contract was deployed. Movement of these fees to the contract deployer's address should also be performed via the withdrawFunds function.
         - Extend the tests to cover this 
         
-2. Take a look at the provided file contracts/TigerBuggyNFT.sol, which contains an implementation of the above requirements. However, as it's name implies, this contract has a number of defects and vulnerabilities. This can be seen if the accompnaying tests are run via `npx hardhat test`, as a number of the tests fail.
-    - Try to get the failing tests to pass by fixing the defects in the contract.
-    - Be warned that the contract contains some defects that are not detected by the tests. There are 10 defects in all, some of which could result in users losing their funds. See how many you can find and fix.
+2. Take a look at the provided file contracts/TigerBuggyNFT.sol, which contains an implementation of the above requirements. However, as it's name implies, this contract has a number of defects and vulnerabilities.
+    - This can be seen if the accompanying tests are run via `npx hardhat test`, as a number of the tests fail.
+        - Try to get the failing tests to pass by fixing the defects in the contract.
+        - Be warned that the contract contains some defects that are not detected by the tests. There are 10 defects in all, some of which could result in users losing their funds. See how many you can find and fix.
     
 3. Once you have completed the project you will be provided with the file contracts/TigerNFT.sol which implements all the requirements without any of the defects. You will also be given a description of all the defects, so you can see how well you did finding them all.
 
 ### Tips
 
-
-
-
-
-
-
-
- 
+ - You will need to do your own research to complete the project. Some useful sources of information include
+      - https://docs.soliditylang.org/
+      - https://solidity-by-example.org/ (at least one of the defects in TigerBuggyNFT is described in the Hacks section here)
+      - https://hardhat.org/tutorial/
+      
+ - When debugging contract code the HardHat console logging facility may help. At the top of the contract, after the line `pragma solidity 0.8.2;` add the line `import "hardhat/console.sol";`. You can then print debug output from your test runs like this: ```
+     constructor(address _artist) {
+        deployer = msg.sender;
+        _init_(artist);
+        console.log("artist is %s owner of token 0 is %s", _artist, tigerOwners[0]);
+    }
+```
