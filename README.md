@@ -17,7 +17,7 @@ Goals for the students are as follows
 
 1. _TigerBasicNFT.sol_ 
 
-  A basic NFT contract along the lines of CryptoZombies (see https://github.com/larvalabs/cryptopunks/blob/master/contracts/CryptoPunksMarket.sol ) that is a starting point for the students to modify.
+  A basic NFT contract along the lines of CryptoPunks (see https://github.com/larvalabs/cryptopunks/blob/master/contracts/CryptoPunksMarket.sol ) that is a starting point for the students to modify.
 
 2. _TigerNFT.sol_ 
   
