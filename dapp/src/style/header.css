@@ -1,0 +1,17 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-direction: row;
+}
+
+.header .address {
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.header .address:hover {
+    background-color: rgb(143, 143, 193);
+}
