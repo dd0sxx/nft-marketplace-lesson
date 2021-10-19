@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import { ethers } from 'ethers';
 import '../style/app.css';
 import Header from './Header.js';
+import tigerNFTAbi from '../assets/tigerNFT.json'
 
 function App() {
 
@@ -9,6 +10,8 @@ function App() {
   window.ethereum.enable().then(provider = new ethers.providers.Web3Provider(window.ethereum))
   const signer = provider.getSigner()
   const [address, setAddress] = useState()
+  const nftAddr = '' // contract address
+  const contract = new ethers.Contract(nftAddr, tigerNFTAbi, provider);
 
   async function connectToMetamask() {
     try {
@@ -26,12 +29,11 @@ function App() {
     connectToMetamask().catch(err => console.error(err))
   }, [])
 
-  // const nftAddr = '' // contract abi
-  // const contract = new ethers.Contract(nftAddr, contractAbi, provider);
 
   return (
     <div className="App">
       <Header provider={provider} address={address} connect={connectToMetamask}/>
+
     </div>
   );
 }
