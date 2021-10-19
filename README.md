@@ -4,7 +4,7 @@
 This project will give engineers a stronger working knowledge of web3. It involves developing a smart contract in Solidity and deploying it to a test network. We will be working with an NFT contract along the lines of CryptoPunks (see https://github.com/larvalabs/cryptopunks/blob/master/contracts/CryptoPunksMarket.sol).
 
 ### Prerequisites
-This project is designed for experienced software engineers who are in the early stages of learning web3. You will be writing code in Solidity, but to get the most out of it you should already be very comfortable writing applications and tests in at least one other language. You should also have some prior knowledge of Solidity. Completion of the first CryptoZombies Solidity Path (https://cryptozombies.io/solidity) would be ideal. All the coding for the project is in Solidity, but the contract deployment and tests make use of JavaScript and NPM. Previous experience of these, or at least the ability to Google your way out of trouble, will help a lot. Finally, there is a front end DApp that provides a web UI based on JavaScript and React. You don't need to work on this to complete the project. However you may be interested to examine it, and your possible next steps on completion of the project include modifying or extending it.
+This project is designed for experienced software engineers who are in the early stages of learning web3. You will be writing code in Solidity, but to get the most out of it you should already be very comfortable writing applications and tests in at least one other language. You should also have some prior knowledge of Solidity. Having previously completed the first CryptoZombies Solidity Path (https://cryptozombies.io/solidity) would be ideal. All the coding for the project is in Solidity, but the contract deployment and tests make use of JavaScript and NPM. Previous experience of these, or at least the ability to Google your way out of trouble, will help a lot. Finally, there is a front end DApp that provides a web UI based on JavaScript and React. You don't need to work on this to complete the project. However you may be interested to examine it, and your possible next steps on completion of the project include modifying or extending it.
 
 ### Tasks
 
@@ -33,19 +33,19 @@ This project is designed for experienced software engineers who are in the early
       - https://solidity-by-example.org/ (at least one of the defects in TigerBuggyNFT is described in the Hacks section here)
       - https://hardhat.org/tutorial/
       
- - When debugging contract code the HardHat console logging facility may help. At the top of the contract, after the line 
- ```
+  - When debugging contract code the HardHat console logging facility may help. At the top of the contract, after the line 
+  ```
  pragma solidity 0.8.2;
- ``` 
- add the line 
- ```
+  ``` 
+ - add the line 
+  ```
  import "hardhat/console.sol";
- ```
- You can then print debug output from your test runs like this: 
- ```
+  ```
+ - You can then print debug output from your test runs like this: 
+  ```
      constructor(address _artist) {
         deployer = msg.sender;
         _init_(artist);
-        console.log("artist is %s owner of token 0 is %s", _artist, tigerOwners[0]);
+        console.log("artist is %s, owner of token 0 is %s", _artist, tigerOwners[0]);
     }
-```
+ ```
