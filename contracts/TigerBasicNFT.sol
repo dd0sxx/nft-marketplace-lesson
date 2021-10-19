@@ -16,6 +16,9 @@ contract TigerBasicNFT {
     // address of the artist, initial owner of all tiger tokens, recipient of artist's fees
     address private artist;
     
+    // initial sale price for all tokens
+    uint private startingPrice;
+    
     // mapping from token ID to owner address
     mapping(uint256 => address) private tigerOwners;
 
@@ -32,9 +35,10 @@ contract TigerBasicNFT {
     mapping (address => uint) public pendingWithdrawals;
 
     // create the contract, artist is set here and never changes subsequently
-    constructor(address _artist) {
+    constructor(address _artist, uint _startingPrice) {
         require(_artist != address(0));
         artist = _artist;
+        startingPrice = _startingPrice;
         deployer = msg.sender;
     }
 
@@ -42,12 +46,22 @@ contract TigerBasicNFT {
     function isForSale(uint tigerIndex) external view returns (bool, uint) {
         require(tigerIndex < totalSupply, "index out of range");
         // @todo does the use of this memory variable save gas or use more of it?
-        SaleOffer memory saleOffer = tigersForSale[tigerIndex];
+        SaleOffer memory saleOffer = getSaleInfo(tigerIndex);
         if (saleOffer.isForSale
             && ((saleOffer.onlySellTo == address(0)) || saleOffer.onlySellTo == msg.sender)) {
             return(true, saleOffer.price);
         }
         return (false, 0);
+    }
+
+    // tokens which have never been sold are for sale at the starting price,
+    // all others are not unless the owner puts them up for sale
+    function getSaleInfo(uint tigerIndex) private view returns (SaleOffer memory saleOffer) {
+        if (tigerOwners[tigerIndex] == address(0)) {
+            saleOffer = SaleOffer(true, artist, startingPrice, address(0));
+        } else {
+            saleOffer = tigersForSale[tigerIndex];
+        }
     }
 
     // get the current owner of a token, unsold tokens belong to the artist
@@ -84,7 +98,7 @@ contract TigerBasicNFT {
     // allow someone to buy a tiger offered for sale to them
     function buyTiger(uint tigerIndex) external payable {
         require(tigerIndex < totalSupply, "index out of range");
-        SaleOffer memory saleOffer = tigersForSale[tigerIndex];
+        SaleOffer memory saleOffer = getSaleInfo(tigerIndex);
         require(saleOffer.isForSale && (saleOffer.onlySellTo == address(0) || saleOffer.onlySellTo == msg.sender),
                 "not for sale");
         require(msg.value >= saleOffer.price, "price not met");

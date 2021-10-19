@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity 0.8.2;
+
+import "hardhat/console.sol";
+
 /*
    NFT Contract along the lines of CryptoPunks. For the original see:
    https://github.com/larvalabs/cryptopunks/blob/master/contracts/CryptoPunksMarket.sol
@@ -22,8 +25,11 @@ contract TigerBuggyNFT {
     // address of the artist, initial owner of all tiger tokens, recipient of artist's fees
     address private artist;
     
+    // initial sale price for all tokens
+    uint private startingPrice;
+    
     // mapping from token ID to owner address
-    mapping(uint256 => address) public tigerOwners;
+    mapping(uint256 => address) private tigerOwners;
 
     // tigers currently up for sale
     struct SaleOffer {
@@ -37,25 +43,19 @@ contract TigerBuggyNFT {
     // ether held by the contract on behalf of addresses that have interacted with it
     mapping (address => uint) public pendingWithdrawals;
 
-    // create and initialize the contract
-    constructor(address _artist) {
-        deployer = msg.sender;
-        _init_(artist);
-    }
-
-    // iniitalize the artist on contract deployment and make them the initial owner of all the tokens
-    function _init_(address _artist) public {
+    // create the contract, artist is set here and never changes subsequently
+    constructor(address _artist, uint _startingPrice) {
+        require(_artist != address(0));
         artist = _artist;
-        for (uint i = 0; i < totalSupply; i++) {
-            tigerOwners[i] = _artist;
-        }
+        startingPrice = _startingPrice;
+        deployer = msg.sender;
     }
     
     // allow anyone to see if a tiger is for sale and, if so, for how much
     function isForSale(uint tigerIndex) external view returns (bool, uint) {
         require(tigerIndex < totalSupply, "index out of range");
         // @todo does the use of this memory variable save gas or use more of it?
-        SaleOffer memory saleOffer = tigersForSale[tigerIndex];
+        SaleOffer memory saleOffer = getSaleInfo(tigerIndex);
         if (saleOffer.isForSale
             && ((saleOffer.onlySellTo == address(0)) || saleOffer.onlySellTo == msg.sender)) {
             return(true, saleOffer.price);
@@ -63,34 +63,53 @@ contract TigerBuggyNFT {
         return (false, 0);
     }
 
+    // tokens which have never been sold are for sale at the starting price,
+    // all others are not unless the owner puts them up for sale
+    function getSaleInfo(uint tigerIndex) private view returns (SaleOffer memory saleOffer) {
+        if (tigerOwners[tigerIndex] == address(0)) {
+            saleOffer = SaleOffer(true, artist, startingPrice, address(0));
+        } else {
+            saleOffer = tigersForSale[tigerIndex];
+        }
+    }
+
+    // get the current owner of a token, unsold tokens belong to the artist
+    function getOwner(uint tigerIndex) public view returns (address) {
+        require(tigerIndex < totalSupply, "index out of range");
+        address owner = tigerOwners[tigerIndex];
+        if (owner == address(0)) {
+            owner = artist;
+        }
+        return owner;
+    }
+
     // allow the current owner to put a tiger token up for sale
     function putUpForSale(uint tigerIndex, uint minSalePriceInWei) external {
         require(tigerIndex < totalSupply, "index out of range");
-        require(tigerOwners[tigerIndex] == msg.sender, "not owner");
+        require(getOwner(tigerIndex) == msg.sender, "not owner");
         tigersForSale[tigerIndex] = SaleOffer(true, msg.sender, minSalePriceInWei, address(0));
     }
 
     // allow the current owner to put a tiger token up for sale
     function putUpForSaleToAddress(uint tigerIndex, uint minSalePriceInWei, address buyer) external {
         require(tigerIndex < totalSupply, "index out of range");
-        require(tigerOwners[tigerIndex] == msg.sender, "not owner");
+        require(getOwner(tigerIndex) == msg.sender, "not owner");
         tigersForSale[tigerIndex] = SaleOffer(true, msg.sender, minSalePriceInWei, buyer);
     }
 
     // allow the current owner to withdraw a tiger token from sale
     function withdrawFromSale(uint tigerIndex) external {
         require(tigerIndex < totalSupply, "index out of range");
-        require(tigerOwners[tigerIndex] == msg.sender, "not owner");
+        require(getOwner(tigerIndex) == msg.sender, "not owner");
         tigersForSale[tigerIndex] = SaleOffer(false, address(0), 0, address(0));
     }
 
     // allow someone to buy a tiger offered for sale to them
     function buyTiger(uint tigerIndex) external payable {
         require(tigerIndex < totalSupply, "index out of range");
-        SaleOffer memory saleOffer = tigersForSale[tigerIndex];
+        SaleOffer memory saleOffer = getSaleInfo(tigerIndex);
         require(saleOffer.isForSale && (saleOffer.onlySellTo == address(0) || saleOffer.onlySellTo == msg.sender),
                 "not for sale");
-        require(saleOffer.seller == tigerOwners[tigerIndex], "seller no longer owns");
         (uint contractRoyalty, uint artistRoyalty) = calculateRoyalties(msg.value);
         pendingWithdrawals[deployer] += contractRoyalty;
         pendingWithdrawals[artist] += artistRoyalty;
