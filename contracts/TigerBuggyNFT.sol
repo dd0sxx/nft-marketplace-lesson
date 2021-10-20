@@ -46,10 +46,15 @@ contract TigerBuggyNFT {
     // create the contract, artist is set here and never changes subsequently
     constructor(address _artist, uint _startingPrice) {
         require(_artist != address(0));
-        artist = _artist;
-        startingPrice = _startingPrice;
-        deployer = msg.sender;
+        _init_(artist, msg.sender, _startingPrice);
     }
+
+    // initialize the contract state
+    function _init_(address _artist, address _deployer, uint _startingPrice) public {
+        artist = _artist;
+        deployer = _deployer;
+        startingPrice = _startingPrice;
+    }        
     
     // allow anyone to see if a tiger is for sale and, if so, for how much
     function isForSale(uint tigerIndex) external view returns (bool, uint) {
