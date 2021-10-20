@@ -43,9 +43,6 @@ This project is designed for experienced software engineers who are in the early
   ```
  - You can then print debug output from your test runs like this: 
   ```
-     constructor(address _artist) {
-        deployer = msg.sender;
-        _init_(artist);
-        console.log("artist is %s, owner of token 0 is %s", _artist, tigerOwners[0]);
-    }
- ```
+        console.log("artist address is %s, owner of token 0 address is %s", artist, tigerOwners[0]);
+  ```
+
