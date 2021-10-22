@@ -1,0 +1,9 @@
+.flex-centered {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.app {
+    margin: 2%;
+}

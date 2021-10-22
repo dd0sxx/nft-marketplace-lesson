@@ -1,0 +1,107 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/costar/Documents/week-long-nft-project/contracts/TigerBasicNFT.sol": {
+      "lastModificationDate": 1634600398809,
+      "contentHash": "f94e509ef58ef124283a567a2052d0f3",
+      "sourceName": "contracts/TigerBasicNFT.sol",
+      "solcConfig": {
+        "version": "0.8.2",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.2"
+      ],
+      "artifacts": [
+        "TigerBasicNFT"
+      ]
+    },
+    "/Users/costar/Documents/week-long-nft-project/contracts/TigerBuggyNFT.sol": {
+      "lastModificationDate": 1634600398809,
+      "contentHash": "87f05c011993f651fa33ad3da006240b",
+      "sourceName": "contracts/TigerBuggyNFT.sol",
+      "solcConfig": {
+        "version": "0.8.2",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.2"
+      ],
+      "artifacts": [
+        "TigerBuggyNFT"
+      ]
+    },
+    "/Users/costar/Documents/week-long-nft-project/contracts/TigerNFT.sol": {
+      "lastModificationDate": 1634600398809,
+      "contentHash": "e8fe0342729ccd6538eb74b0dbe4bbd3",
+      "sourceName": "contracts/TigerNFT.sol",
+      "solcConfig": {
+        "version": "0.8.2",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.2"
+      ],
+      "artifacts": [
+        "TigerNFT"
+      ]
+    }
+  }
+}

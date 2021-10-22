@@ -2,13 +2,19 @@ import {useEffect, useState} from 'react';
 import { ethers } from 'ethers';
 import '../style/app.css';
 import Header from './Header.js';
+import TokenList from './TokenList.js';
+import tigerNFTABI from '../assets/tigerNFT'
 
 function App() {
+
+  const [page, setPage] = useState(0)
 
   let provider
   window.ethereum.enable().then(provider = new ethers.providers.Web3Provider(window.ethereum))
   const signer = provider.getSigner()
   const [address, setAddress] = useState()
+  const nftAddr = '0x65eeD93FE9343A0b1f5E6C2a4Ed5FC715a3813d8'
+  const contract = new ethers.Contract(nftAddr, tigerNFTABI, provider);
 
   async function connectToMetamask() {
     try {
@@ -26,12 +32,16 @@ function App() {
     connectToMetamask().catch(err => console.error(err))
   }, [])
 
-  // const nftAddr = '' // contract abi
-  // const contract = new ethers.Contract(nftAddr, contractAbi, provider);
 
   return (
-    <div className="App">
+    <div className="app">
       <Header provider={provider} address={address} connect={connectToMetamask}/>
+      <TokenList provider={provider} address={address} contract={contract} page={page}/>
+      <div className='flex-centered '>
+          <div className='page-button'>Page:</div>
+          {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 50)}}>Prev</div> : <></>}
+          <div className='page-button' onClick={() => {setPage(page + 50)}}>Next</div>
+      </div>
     </div>
   );
 }

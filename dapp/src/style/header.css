@@ -15,3 +15,12 @@
 .header .address:hover {
     background-color: rgb(143, 143, 193);
 }
+
+.header .wallet {
+    justify-content: space-between;
+    width: 150px;
+}
+
+.header .wallet:hover {
+    cursor: pointer;
+}

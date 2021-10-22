@@ -1,0 +1,28 @@
+.tokenList {
+    width: 100%;
+    flex-wrap: wrap;
+    display: flex;
+}
+
+.tokenCard {
+    height: 300px;
+    width: 200px;
+    border-radius: 15px;
+    background-color: rgb(232, 232, 232);
+    border: 1px solid black;
+    padding: 10px;
+    margin: 20px;
+}
+
+.tokenCard .image {
+    width: 180px;
+    height: 180px;
+    margin: auto;
+    border-radius: 10px;
+    background-color: white;
+    margin: 10px;
+}
+
+.page-button  {
+    padding: 10px;
+}
