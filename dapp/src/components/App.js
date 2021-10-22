@@ -7,6 +7,8 @@ import tigerNFTABI from '../assets/tigerNFT'
 
 function App() {
 
+  const [page, setPage] = useState(0)
+
   let provider
   window.ethereum.enable().then(provider = new ethers.providers.Web3Provider(window.ethereum))
   const signer = provider.getSigner()
@@ -34,7 +36,12 @@ function App() {
   return (
     <div className="app">
       <Header provider={provider} address={address} connect={connectToMetamask}/>
-      <TokenList provider={provider} address={address} contract={contract}/>
+      <TokenList provider={provider} address={address} contract={contract} page={page}/>
+      <div className='flex-centered '>
+          <div className='page-button'>Page:</div>
+          {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 50)}}>Prev</div> : <></>}
+          <div className='page-button' onClick={() => {setPage(page + 50)}}>Next</div>
+      </div>
     </div>
   );
 }
