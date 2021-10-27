@@ -8,7 +8,7 @@ pragma solidity 0.8.2;
 contract TigerNFT {
 
     // how many unique tiger tokens exist
-    uint public constant totalSupply = 1000;
+    uint public constant totalSupply = 100;
     
     // address that deployed this contract
     address private deployer;

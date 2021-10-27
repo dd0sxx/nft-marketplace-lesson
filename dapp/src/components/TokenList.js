@@ -3,7 +3,7 @@ import { ethers } from 'ethers';
 import TokenCard from './TokenCard'
 import '../style/tokens.css'
 
-function TokenList ({provider, address, connect, contract, page, tokensPerPage}) {
+function TokenList ({provider, address, contract, page, tokensPerPage}) {
 
     const totalSupply = 100
     const [list, setList] = useState([])
@@ -20,7 +20,7 @@ function TokenList ({provider, address, connect, contract, page, tokensPerPage})
     return (
         <div className='tokenList'>
             {list.slice(page * tokensPerPage, page * tokensPerPage + tokensPerPage).map((_, id) =>  {
-                return <TokenCard id={id}/>
+                return <TokenCard id={id} provider={provider} address={address} contract={contract}/>
             })}
         </div>
     )
