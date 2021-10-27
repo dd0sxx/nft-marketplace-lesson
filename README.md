@@ -45,4 +45,6 @@ This project is designed for experienced software engineers who are in the early
   ```
         console.log("artist address is %s, owner of token 0 address is %s", artist, tigerOwners[0]);
   ```
+### Acknowledgements
 
+This repository includes code from HeadlessUI by Tailwind Labs https://github.com/tailwindlabs/headlessui
