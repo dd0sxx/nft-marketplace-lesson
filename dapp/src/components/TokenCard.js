@@ -10,7 +10,7 @@ function TokenCard ({id, provider, address, contract}) {
     async function getPrice() {
         let saleInfo = await contract.isForSale(id)
         console.log("sale info", saleInfo)
-        // {isForSale, _, price, onlySellTo} = saleInfo
+        let [isForSale, price] = saleInfo
     }
     getPrice()
     return (
