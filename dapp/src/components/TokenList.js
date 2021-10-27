@@ -3,15 +3,15 @@ import { ethers } from 'ethers';
 import TokenCard from './TokenCard'
 import '../style/tokens.css'
 
-function TokenList ({provider, address, connect, contract, page}) {
+function TokenList ({provider, address, connect, contract, page, tokensPerPage}) {
 
-    const [totalSupply, setTotalSupply] = useState(1000)
+    const totalSupply = 100
     const [list, setList] = useState([])
 
 
     useEffect(() => {
         let tempArray = []
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < totalSupply; i++) {
             tempArray.push(i)
         }
         setList(tempArray)
@@ -19,8 +19,8 @@ function TokenList ({provider, address, connect, contract, page}) {
 
     return (
         <div className='tokenList'>
-            {list.slice(page * 50, page * 50 + 50).map((_, id) =>  {
-                return <TokenCard />
+            {list.slice(page * tokensPerPage, page * tokensPerPage + tokensPerPage).map((_, id) =>  {
+                return <TokenCard id={id}/>
             })}
         </div>
     )

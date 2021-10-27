@@ -19,6 +19,7 @@ function App() {
     const nftAddr = '0x65eeD93FE9343A0b1f5E6C2a4Ed5FC715a3813d8'
     const contract = new ethers.Contract(nftAddr, tigerNFTABI, provider);
     const rinkeby_chain = "0x4"
+    const tokensPerPage = 12
 
     window.ethereum.on('chainChanged', handleChainChanged);
 
@@ -48,20 +49,19 @@ function App() {
     }
 
     useEffect(() => {
-        connectToMetamask().catch(err => console.error(err))
-    }, [])
+        connectToMetamask().catch(err => console.error(err))}, [])
 
 
     return (
             <div className="app">
-            <Header provider={provider} address={address} connect={connectToMetamask}/>
-            <TokenList provider={provider} address={address} contract={contract} page={page}/>
+            <Header address={address} connect={connectToMetamask}/>
+            <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage}/>
             <div className='flex-centered '>
             <div className='page-button'>Page:</div>
-            {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 50)}}>Prev</div> : <></>}
-            <div className='page-button' onClick={() => {setPage(page + 50)}}>Next</div>
+            {page > 0 ? <div className='page-button' onClick={() => {setPage(page - tokensPerPage)}}>Prev</div> : <></>}
+            <div className='page-button' onClick={() => {setPage(page + tokensPerPage)}}>Next</div>
             </div>
-            <ChainMsg open={chainWarning} setOpen={setChainWarning} chainId={chainId}/>
+            <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
             </div>
     );
 }
