@@ -19,7 +19,7 @@ function TokenList ({provider, address, contract, page, tokensPerPage}) {
 
     return (
         <div className='tokenList'>
-            {list.slice(page * tokensPerPage, page * tokensPerPage + tokensPerPage).map((_, id) =>  {
+            {list.slice(page * tokensPerPage, page * tokensPerPage + tokensPerPage).map(id =>  {
                 return <TokenCard id={id} provider={provider} address={address} contract={contract}/>
             })}
         </div>
