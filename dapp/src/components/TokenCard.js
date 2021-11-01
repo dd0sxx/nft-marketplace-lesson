@@ -9,15 +9,15 @@ function TokenCard ({id, provider, address, contract}) {
     
     async function getPrice() {
         let saleInfo = await contract.isForSale(id)
-        console.log("sale info", saleInfo)
         let [isForSale, price] = saleInfo
     }
+
     getPrice()
     return (
         <div className='tokenCard'>
             <div className='title'>title</div>
             <div>id={id}</div>
-            <div className='image'></div>
+            <div className='image' style={{backgroundImage: `url("https://ipfs.io/ipfs/QmVBm9qzvZSPZUF3bYq8QFCMxBdukrfPYi1cGFcYL6wSAY/1.png")`}}></div>
             <div className='price'>price {isForSale ? price : "not for sale"}</div>
         </div>
     )
