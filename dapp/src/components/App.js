@@ -10,6 +10,7 @@ function App() {
 
     const [page, setPage] = useState(0)
     const [chainId, setChainId] = useState(-1)
+    const totalSupply = 100
 
     let provider
     window.ethereum.enable().then(provider = new ethers.providers.Web3Provider(window.ethereum, "rinkeby"))
@@ -48,23 +49,23 @@ function App() {
         }
     }
 
-    async function initForTesting() {
-        await contract.isForSale(1)
-        // await contract.putUpForSale(1, ethers.utils.parseEther("1"))
-    }
+    // async function initForTesting() {
+    //     await contract.isForSale(1)
+    //     await contract.putUpForSale(1, ethers.utils.parseEther("1"))
+    // }
     
     useEffect(() => {connectToMetamask().catch(err => console.error(err))}, [])
-    useEffect(() => {initForTesting()}, [])
+    // useEffect(() => {initForTesting()}, [])
 
 
     return (
             <div className="app">
             <Header address={address} connect={connectToMetamask}/>
-            <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage}/>
+            <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply}/>
             <div className='flex-centered '>
             <div className='page-button'>Page:</div>
             {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 1)}}>Prev</div> : <></>}
-            <div className='page-button' onClick={() => {setPage(page + 1)}}>Next</div>
+        {((page + 1) * tokensPerPage) < totalSupply ? <div className='page-button' onClick={() => {setPage(page + 1)}}>Next</div> : <></>}
             </div>
             <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
             </div>

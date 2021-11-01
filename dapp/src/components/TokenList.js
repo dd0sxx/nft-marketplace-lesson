@@ -3,9 +3,8 @@ import { ethers } from 'ethers';
 import TokenCard from './TokenCard'
 import '../style/tokens.css'
 
-function TokenList ({provider, address, contract, page, tokensPerPage}) {
+function TokenList ({provider, address, contract, page, tokensPerPage, totalSupply}) {
 
-    const totalSupply = 100
     const [list, setList] = useState([])
 
 
