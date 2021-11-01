@@ -48,8 +48,13 @@ function App() {
         }
     }
 
-    useEffect(() => {
-        connectToMetamask().catch(err => console.error(err))}, [])
+    async function initForTesting() {
+        await contract.isForSale(1)
+        // await contract.putUpForSale(1, ethers.utils.parseEther("1"))
+    }
+    
+    useEffect(() => {connectToMetamask().catch(err => console.error(err))}, [])
+    useEffect(() => {initForTesting()}, [])
 
 
     return (
@@ -58,8 +63,8 @@ function App() {
             <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage}/>
             <div className='flex-centered '>
             <div className='page-button'>Page:</div>
-            {page > 0 ? <div className='page-button' onClick={() => {setPage(page - tokensPerPage)}}>Prev</div> : <></>}
-            <div className='page-button' onClick={() => {setPage(page + tokensPerPage)}}>Next</div>
+            {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 1)}}>Prev</div> : <></>}
+            <div className='page-button' onClick={() => {setPage(page + 1)}}>Next</div>
             </div>
             <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
             </div>
