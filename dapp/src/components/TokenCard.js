@@ -3,21 +3,24 @@ import { ethers } from 'ethers';
 
 function TokenCard ({id, provider, address, contract}) {
 
-    let isForSale
-    let price
+    const [isForSale, setIsForSale] = useState([])
+    const [price, setPrice] = useState([])
     
-    async function getPrice() {
-        let [isForSale, price] = await contract.isForSale(id)
+    async function getPriceInfo() {
+        let _isForSale, _price
+        [_isForSale, _price] = await contract.isForSale(id)
+        setIsForSale(_isForSale)
+        setPrice(_price)
     }
 
+    useEffect(() => {getPriceInfo()}, [])
 
-    getPrice()
     return (
         <div className='tokenCard'>
             <div className='title'>title</div>
             <div>id={id}</div>
             <div className='image' style={{backgroundImage: `url("https://ipfs.io/ipfs/QmVBm9qzvZSPZUF3bYq8QFCMxBdukrfPYi1cGFcYL6wSAY/1.png")`}}></div>
-            <div className='price'>{isForSale ? "price: " + price : "not for sale"}</div>
+            <div className='price'>{isForSale ? "price: " + ethers.utils.formatEther(price) : "not for sale"}</div>
         </div>
     )
 }

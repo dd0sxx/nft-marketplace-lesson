@@ -50,8 +50,9 @@ function App() {
     }
 
     // async function initForTesting() {
-    //     await contract.isForSale(1)
-    //     await contract.putUpForSale(1, ethers.utils.parseEther("1"))
+    //     console.log("is for sale before: " + await contract.isForSale(1))
+    //     await contract.connect(signer).putUpForSale(1, ethers.utils.parseEther("1"))
+    //     console.log("is for sale after: " + await contract.isForSale(1))
     // }
     
     useEffect(() => {connectToMetamask().catch(err => console.error(err))}, [])
