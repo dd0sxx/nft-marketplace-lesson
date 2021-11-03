@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import { ethers } from 'ethers';
+import ethSVG from '../assets/eth-symbol-virgil.svg'
 
 function TokenCard ({id, provider, address, contract}) {
 
@@ -17,11 +18,17 @@ function TokenCard ({id, provider, address, contract}) {
 
     return (
         <div className='tokenCard'>
-            <div className='title'>title</div>
-            <div>id={id}</div>
+            <div className='title'>Tiger #{id}</div>
             {/* replace the next line background image with token id when all the images go online */}
-            <div className='image' style={{backgroundImage: `url("https://ipfs.io/ipfs/QmZWUmdscMCmvvZfNp3BwTvLim26hsDT8BqAYxjFHWjgQ2/${id}.png")`}}></div>
-            <div className='price'>{isForSale ? "price: " + ethers.utils.formatEther(price) : "not for sale"}</div>
+            <div className='image' style={{backgroundImage: `url("https://ipfs.io/ipfs/QmZWUmdscMCmvvZfNp3BwTvLim26hsDT8BqAYxjFHWjgQ2/${id}.png")`}} />
+                {isForSale ?
+                    <div className='flex-centered'>
+                        <div style={{backgroundImage: `url("${ethSVG}")`, backgroundRepeat: 'no', backgroundSize: 'contain', width: 20, height: 20}}/>
+                        <div className='price'>{ethers.utils.formatEther(price)}</div>
+                    </div>
+                    :
+                    <div className='price'>"not for sale"</div>
+                }
         </div>
     )
 }
