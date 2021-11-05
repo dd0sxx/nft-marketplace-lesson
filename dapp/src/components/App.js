@@ -23,6 +23,7 @@ function App() {
     let provider
     window.ethereum.enable().then(provider = new ethers.providers.Web3Provider(window.ethereum, "rinkeby"))
     const signer = provider.getSigner()
+    window.signer = signer
     const nftAddr = '0x65eeD93FE9343A0b1f5E6C2a4Ed5FC715a3813d8'
     const contract = new ethers.Contract(nftAddr, tigerNFTABI, provider);
     const rinkeby_chain = "0x4"
@@ -75,16 +76,16 @@ function App() {
                 :
                 <div>
                 <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply} setCurrentlyBuying={setCurrentlyBuying}/>
-                    <div className='flex-centered '>
-                    <div className='page-button'>Page:</div>
-                    {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 1)}}>Prev</div> : <></>}
-                    {((page + 1) * tokensPerPage) < totalSupply ? <div className='page-button' onClick={() => {setPage(page + 1)}}>Next</div> : <></>}
-                    </div>
-                    <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
-                <BuyDialog currentlyBuying={currentlyBuying} setCurrentlyBuying={setCurrentlyBuying}/>
+                <div className='flex-centered '>
+                <div className='page-button'>Page:</div>
+                {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 1)}}>Prev</div> : <></>}
+                {((page + 1) * tokensPerPage) < totalSupply ? <div className='page-button' onClick={() => {setPage(page + 1)}}>Next</div> : <></>}
+                </div>
+                <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
+                <BuyDialog currentlyBuying={currentlyBuying} setCurrentlyBuying={setCurrentlyBuying} contract={contract} address={address} signer={signer}/>
                 </div>
             }
-            </div>
+        </div>
     );
 }
 

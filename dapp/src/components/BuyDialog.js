@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 
-export default function BuyDialog({currentlyBuying, setCurrentlyBuying}) {
+export default function BuyDialog({currentlyBuying, setCurrentlyBuying, contract, address, signer}) {
 
     function closeModal() {
         setCurrentlyBuying(null)
@@ -10,9 +10,14 @@ export default function BuyDialog({currentlyBuying, setCurrentlyBuying}) {
 
     function formatEtherPercentage(percentage) {
         if (currentlyBuying) {
-            return ethers.utils.formatEther(currentlyBuying.price.mul(percentage).div(100))
+            return ethers.utils.formatEther(currentlyBuying.price.mul(percentage).div(100).toString())
         }
         return ""
+    }
+
+    async function buyToken() {
+        await contract.connect(signer).buyTiger(currentlyBuying.id, {value: currentlyBuying.price})
+        closeModal()
     }
     
   return (
@@ -67,9 +72,16 @@ export default function BuyDialog({currentlyBuying, setCurrentlyBuying}) {
                   <button
                     type="button"
                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                    onClick={buyToken}
+                  >
+                    Buy
+                  </button>
+                  <button
+                    type="button"
+                    className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                     onClick={closeModal}
                   >
-                    OK
+                    Cancel
                   </button>
                 </div>
               </div>
