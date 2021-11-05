@@ -12,6 +12,8 @@ function App() {
     const [page, setPage] = useState(0)
     const [profilePageOpen, setProfilePageOpen] = useState(false)
     const [chainId, setChainId] = useState(-1)
+    const [walletOfOwner, setWalletOfOwner] = useState([])
+    
     const totalSupply = 100
 
     let provider
@@ -51,13 +53,25 @@ function App() {
         }
     }
 
+    const getWalletOfOwner = async () => {
+        for (let i = 0; i < 100; i++) {
+            if (await contract.getOwner(i) == address) {
+                setWalletOfOwner(walletOfOwner.push(i))
+            } 
+        }
+    }
+
     useEffect(() => {connectToMetamask().catch(err => console.error(err))}, [])
+
+    useEffect(() => {
+        getWalletOfOwner().then(() => console.log(walletOfOwner)).catch(err => console.error(err))
+    }, [address])
 
     return (
             <div className="app">
             <Header address={address} connect={connectToMetamask} profilePageOpen={profilePageOpen} setProfilePageOpen={setProfilePageOpen}/>
             {   profilePageOpen ?
-                <Profile />
+                <Profile walletOfOwner={walletOfOwner} />
                 :
                 <div>
                     <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply}/>
