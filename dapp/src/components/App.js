@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import { ethers } from 'ethers';
 import '../style/app.css';
 import Header from './Header.js';
+import Profile from './Profile.js';
 import TokenList from './TokenList.js';
 import tigerNFTABI from '../assets/tigerNFT'
 import ChainMsg from './Modal.js'
@@ -9,7 +10,11 @@ import ChainMsg from './Modal.js'
 function App() {
 
     const [page, setPage] = useState(0)
+    const [profilePageOpen, setProfilePageOpen] = useState(false)
+    const [homePageOpen, setHomePageOpen] = useState(false)
     const [chainId, setChainId] = useState(-1)
+    const [walletOfOwner, setWalletOfOwner] = useState([])
+    
     const totalSupply = 100
 
     let provider
@@ -49,18 +54,36 @@ function App() {
         }
     }
 
+    const getWalletOfOwner = async () => {
+        for (let i = 0; i < 100; i++) {
+            if (await contract.getOwner(i) == address) {
+                setWalletOfOwner(walletOfOwner.push(i))
+            } 
+        }
+    }
+
     useEffect(() => {connectToMetamask().catch(err => console.error(err))}, [])
+
+    useEffect(() => {
+        getWalletOfOwner().then(() => console.log(walletOfOwner)).catch(err => console.error(err))
+    }, [address])
 
     return (
             <div className="app">
-            <Header address={address} connect={connectToMetamask}/>
-            <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply}/>
-            <div className='flex-centered '>
-            <div className='page-button'>Page:</div>
-            {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 1)}}>Prev</div> : <></>}
-        {((page + 1) * tokensPerPage) < totalSupply ? <div className='page-button' onClick={() => {setPage(page + 1)}}>Next</div> : <></>}
-            </div>
-            <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
+            <Header address={address} connect={connectToMetamask} setHomePageOpen={setHomePageOpen} setProfilePageOpen={setProfilePageOpen}/>
+            {   profilePageOpen && !homePageOpen ?
+                <Profile walletOfOwner={walletOfOwner} provider={provider} address={address} contract={contract}/>
+                :
+                <div>
+                    <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply}/>
+                    <div className='flex-centered '>
+                    <div className='page-button'>Page:</div>
+                    {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 1)}}>Prev</div> : <></>}
+                    {((page + 1) * tokensPerPage) < totalSupply ? <div className='page-button' onClick={() => {setPage(page + 1)}}>Next</div> : <></>}
+                    </div>
+                    <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
+                </div>
+            }
             </div>
     );
 }
