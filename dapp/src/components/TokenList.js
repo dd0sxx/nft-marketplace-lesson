@@ -8,18 +8,30 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
     const [list, setList] = useState([])
 
 
-    useEffect(() => {
-        let tempArray = []
-        for (let i = 0; i < totalSupply; i++) {
-            tempArray.push(i)
+    async function getPriceInfo() {
+        for (let id = 0; id < totalSupply; id++) {
+            let isForSale, price
+            [isForSale, price] = await contract.isForSale(id)
+            let token = {id: id, isForSale: isForSale, price: price}            
+            setList(a => {
+                a.push(token)
+                return a
+            })
+            if (id === tokensPerPage) {
+                setList(a => {
+                    return a.slice()
+                })
+            }
         }
-        setList(tempArray)
-    }, [])
+        setList(a => {return a.slice()})
+    }
+
+    useEffect(() => {getPriceInfo()}, [])
 
     return (
         <div className='tokenList'>
-            {list.slice(page * tokensPerPage, page * tokensPerPage + tokensPerPage).map(id =>  {
-                return <TokenCard id={id} provider={provider} address={address} contract={contract}/>
+            {list.slice(page * tokensPerPage, page * tokensPerPage + tokensPerPage).map(token =>  {
+                return <TokenCard id={token.id} isForSale={token.isForSale} price={token.price}/>
             })}
         </div>
     )
