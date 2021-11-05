@@ -3,16 +3,21 @@ import { ethers } from 'ethers';
 import '../style/header.css'
 import walletSVG from '../assets/wallet.svg'
 
-function Header ({address, connect, profilePageOpen, setProfilePageOpen}) {
+function Header ({address, connect, setHomePageOpen, setProfilePageOpen}) {
 
     const setProfile = () => {
-        profilePageOpen ? setProfilePageOpen(false) : setProfilePageOpen(true)
-        console.log(profilePageOpen)
+        setProfilePageOpen(true)
+        setHomePageOpen(false)
+    }
+
+    const setHome = () => {
+        setProfilePageOpen(false)
+        setHomePageOpen(true)
     }
 
     return (
         <div className='header flex-centered'>
-            <h1>Tiger NFT</h1>
+            <h1 onClick={setHome}>Tiger NFT</h1>
             <div className='wallet flex-centered'>
                 <div onClick={setProfile} style={{ backgroundImage: `url(${walletSVG})`, width: 30, height: 30, backgroundSize: 'fit'}} />
                 <div onClick={connect} className='address'>{

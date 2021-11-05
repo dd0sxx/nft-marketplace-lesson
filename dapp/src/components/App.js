@@ -11,6 +11,7 @@ function App() {
 
     const [page, setPage] = useState(0)
     const [profilePageOpen, setProfilePageOpen] = useState(false)
+    const [homePageOpen, setHomePageOpen] = useState(false)
     const [chainId, setChainId] = useState(-1)
     const [walletOfOwner, setWalletOfOwner] = useState([])
     
@@ -69,9 +70,9 @@ function App() {
 
     return (
             <div className="app">
-            <Header address={address} connect={connectToMetamask} profilePageOpen={profilePageOpen} setProfilePageOpen={setProfilePageOpen}/>
-            {   profilePageOpen ?
-                <Profile walletOfOwner={walletOfOwner} />
+            <Header address={address} connect={connectToMetamask} setHomePageOpen={setHomePageOpen} setProfilePageOpen={setProfilePageOpen}/>
+            {   profilePageOpen && !homePageOpen ?
+                <Profile walletOfOwner={walletOfOwner} provider={provider} address={address} contract={contract}/>
                 :
                 <div>
                     <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply}/>

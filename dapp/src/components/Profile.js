@@ -1,26 +1,15 @@
 import { Contract } from 'ethers';
 import {useEffect, useState} from 'react';
+import TokenCard from './TokenCard';
 import '../style/profile.css'
 
-function Profile ({}) {
-
-    // const [walletOfOwner, setWalletOfOwner] = useState([])
-
-    // const getWalletOfOwner = async () => {
-    //     for (let i = 0; i < 100; i++) {
-    //         if (await contract.getOwner(i) == address) {
-    //             setWalletOfOwner(walletOfOwner.push(i))
-    //         } 
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     getWalletOfOwner().then(() => console.log(walletOfOwner)).catch(err => console.error(err))
-    // })
+function Profile ({walletOfOwner, provider, address, contract}) {
 
     return (
         <div className='profile'>
-            
+            {walletOfOwner.map(token => {
+                <TokenCard id={token} provider={provider} address={address} contract={contract}/>
+            })}
         </div>
     )
 }
