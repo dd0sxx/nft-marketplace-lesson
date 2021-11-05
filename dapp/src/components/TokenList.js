@@ -1,9 +1,8 @@
 import {useEffect, useState} from 'react';
-import { ethers } from 'ethers';
 import TokenCard from './TokenCard'
 import '../style/tokens.css'
 
-function TokenList ({provider, address, contract, page, tokensPerPage, totalSupply}) {
+function TokenList ({provider, address, contract, page, tokensPerPage, totalSupply, setCurrentlyBuying}) {
 
     const [list, setList] = useState([])
 
@@ -31,7 +30,7 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
     return (
         <div className='tokenList'>
             {list.slice(page * tokensPerPage, page * tokensPerPage + tokensPerPage).map(token =>  {
-                return <TokenCard id={token.id} isForSale={token.isForSale} price={token.price}/>
+                return <TokenCard token={token} setCurrentlyBuying={setCurrentlyBuying}/>
             })}
         </div>
     )

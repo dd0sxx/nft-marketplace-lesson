@@ -6,22 +6,23 @@ import Profile from './Profile.js';
 import TokenList from './TokenList.js';
 import tigerNFTABI from '../assets/tigerNFT'
 import ChainMsg from './Modal.js'
+import BuyDialog from './BuyDialog.js'
 
 function App() {
 
     const [page, setPage] = useState(0)
     const [profilePageOpen, setProfilePageOpen] = useState(false)
     const [homePageOpen, setHomePageOpen] = useState(false)
-    const [chainId, setChainId] = useState(-1)
     const [walletOfOwner, setWalletOfOwner] = useState([])
+    const [address, setAddress] = useState()
+    const [chainWarning, setChainWarning] = useState(false)
+    const [currentlyBuying, setCurrentlyBuying] = useState(null)
     
     const totalSupply = 100
 
     let provider
     window.ethereum.enable().then(provider = new ethers.providers.Web3Provider(window.ethereum, "rinkeby"))
     const signer = provider.getSigner()
-    const [address, setAddress] = useState()
-    const [chainWarning, setChainWarning] = useState(false)
     const nftAddr = '0x65eeD93FE9343A0b1f5E6C2a4Ed5FC715a3813d8'
     const contract = new ethers.Contract(nftAddr, tigerNFTABI, provider);
     const rinkeby_chain = "0x4"
@@ -33,7 +34,6 @@ function App() {
         if (_chainId.toString() !== rinkeby_chain) {
             setChainWarning(true)
         }
-        setChainId(_chainId)
         window.location.reload()
     }
 
@@ -43,7 +43,6 @@ function App() {
             console.log("Signed in", res)
             setAddress(res)
             let _chainId = (await window.ethereum.request({ method: 'eth_chainId' }))
-            setChainId(_chainId)
             if (_chainId.toString() !== rinkeby_chain) {
                 setChainWarning(true)
             }
@@ -56,7 +55,7 @@ function App() {
 
     const getWalletOfOwner = async () => {
         for (let i = 0; i < 100; i++) {
-            if (await contract.getOwner(i) == address) {
+            if (await contract.getOwner(i) === address) {
                 setWalletOfOwner(walletOfOwner.push(i))
             } 
         }
@@ -75,13 +74,14 @@ function App() {
                 <Profile walletOfOwner={walletOfOwner} provider={provider} address={address} contract={contract}/>
                 :
                 <div>
-                    <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply}/>
+                <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply} setCurrentlyBuying={setCurrentlyBuying}/>
                     <div className='flex-centered '>
                     <div className='page-button'>Page:</div>
                     {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 1)}}>Prev</div> : <></>}
                     {((page + 1) * tokensPerPage) < totalSupply ? <div className='page-button' onClick={() => {setPage(page + 1)}}>Next</div> : <></>}
                     </div>
                     <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
+                <BuyDialog currentlyBuying={currentlyBuying} setCurrentlyBuying={setCurrentlyBuying}/>
                 </div>
             }
             </div>

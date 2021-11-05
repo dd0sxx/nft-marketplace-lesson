@@ -1,14 +1,22 @@
+import { ethers } from 'ethers';
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
 
-export default function BuyDialog({open, setOpen}) {
+export default function BuyDialog({currentlyBuying, setCurrentlyBuying}) {
 
     function closeModal() {
-        setOpen(false)
+        setCurrentlyBuying(null)
+    }
+
+    function formatEtherPercentage(percentage) {
+        if (currentlyBuying) {
+            return ethers.utils.formatEther(currentlyBuying.price.mul(percentage).div(100))
+        }
+        return ""
     }
     
   return (
-      <Transition appear show={open} as={Fragment}>
+      <Transition appear show={currentlyBuying !== null} as={Fragment}>
         <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto"onClose={closeModal}>
           <div className="min-h-screen px-4 text-center">
             <Transition.Child
@@ -39,23 +47,22 @@ export default function BuyDialog({open, setOpen}) {
             >
               <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
                 <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-                  Buy Tiger
-                </Dialog.Title>
+          Buy Tiger #{currentlyBuying?.id}
+              </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
-                     You will pay ...
+          You will pay {formatEtherPercentage(100)}
                   </p>
                   <p className="text-sm text-gray-500">
-                     Current owner will get...
+          Current owner will get {formatEtherPercentage(94)}
                   </p>
                   <p className="text-sm text-gray-500">
-                     Artist will get...
+          Artist will get {formatEtherPercentage(5)}
                   </p>
                   <p className="text-sm text-gray-500">
-                     Contract treasury will get...
+          Contract treasury will get {formatEtherPercentage(1)}
                   </p>
-                </div>
-
+              </div>
                 <div className="mt-4">
                   <button
                     type="button"
