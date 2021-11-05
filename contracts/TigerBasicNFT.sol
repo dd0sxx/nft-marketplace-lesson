@@ -8,7 +8,7 @@ pragma solidity 0.8.2;
 contract TigerBasicNFT {
 
     // how many unique tiger tokens exist
-    uint public constant totalSupply = 1000;
+    uint public constant totalSupply = 100;
     
     // address that deployed this contract
     address private deployer;
@@ -18,22 +18,25 @@ contract TigerBasicNFT {
     
     // initial sale price for all tokens
     uint private startingPrice;
-    
+
     // mapping from token ID to owner address
     mapping(uint256 => address) private tigerOwners;
-
+ 
     // tigers currently up for sale
     struct SaleOffer {
         bool isForSale;
         address seller;
         uint price;
-        address onlySellTo; //isForSale true plus zero for onlySellTo address means sell to anyone 
     }
     mapping (uint => SaleOffer) public tigersForSale;
 
     // ether held by the contract on behalf of addresses that have interacted with it
     mapping (address => uint) public pendingWithdrawals;
 
+    event TigerForSale(address indexed seller, uint indexed tigerId, uint price);
+    event TigerSold(address indexed seller, address indexed buyer, uint indexed tigerId, uint price);
+    event TigerWithdrawnFromSale(address indexed seller, uint indexed tigerId);
+    
     // create the contract, artist is set here and never changes subsequently
     constructor(address _artist, uint _startingPrice) {
         require(_artist != address(0));
@@ -45,10 +48,8 @@ contract TigerBasicNFT {
     // allow anyone to see if a tiger is for sale and, if so, for how much
     function isForSale(uint tigerIndex) external view returns (bool, uint) {
         require(tigerIndex < totalSupply, "index out of range");
-        // @todo does the use of this memory variable save gas or use more of it?
         SaleOffer memory saleOffer = getSaleInfo(tigerIndex);
-        if (saleOffer.isForSale
-            && ((saleOffer.onlySellTo == address(0)) || saleOffer.onlySellTo == msg.sender)) {
+        if (saleOffer.isForSale) {
             return(true, saleOffer.price);
         }
         return (false, 0);
@@ -58,7 +59,7 @@ contract TigerBasicNFT {
     // all others are not unless the owner puts them up for sale
     function getSaleInfo(uint tigerIndex) private view returns (SaleOffer memory saleOffer) {
         if (tigerOwners[tigerIndex] == address(0)) {
-            saleOffer = SaleOffer(true, artist, startingPrice, address(0));
+            saleOffer = SaleOffer(true, artist, startingPrice);
         } else {
             saleOffer = tigersForSale[tigerIndex];
         }
@@ -78,34 +79,29 @@ contract TigerBasicNFT {
     function putUpForSale(uint tigerIndex, uint minSalePriceInWei) external {
         require(tigerIndex < totalSupply, "index out of range");
         require(getOwner(tigerIndex) == msg.sender, "not owner");
-        tigersForSale[tigerIndex] = SaleOffer(true, msg.sender, minSalePriceInWei, address(0));
-    }
-
-    // allow the current owner to put a tiger token up for sale
-    function putUpForSaleToAddress(uint tigerIndex, uint minSalePriceInWei, address buyer) external {
-        require(tigerIndex < totalSupply, "index out of range");
-        require(getOwner(tigerIndex) == msg.sender, "not owner");
-        tigersForSale[tigerIndex] = SaleOffer(true, msg.sender, minSalePriceInWei, buyer);
+        tigersForSale[tigerIndex] = SaleOffer(true, msg.sender, minSalePriceInWei);
+        emit TigerForSale(msg.sender, tigerIndex, minSalePriceInWei);
     }
 
     // allow the current owner to withdraw a tiger token from sale
     function withdrawFromSale(uint tigerIndex) external {
         require(tigerIndex < totalSupply, "index out of range");
         require(getOwner(tigerIndex) == msg.sender, "not owner");
-        tigersForSale[tigerIndex] = SaleOffer(false, address(0), 0, address(0));
+        tigersForSale[tigerIndex] = SaleOffer(false, address(0), 0);
+        emit TigerWithdrawnFromSale(msg.sender, tigerIndex);
     }
 
     // allow someone to buy a tiger offered for sale to them
     function buyTiger(uint tigerIndex) external payable {
         require(tigerIndex < totalSupply, "index out of range");
         SaleOffer memory saleOffer = getSaleInfo(tigerIndex);
-        require(saleOffer.isForSale && (saleOffer.onlySellTo == address(0) || saleOffer.onlySellTo == msg.sender),
-                "not for sale");
+        require(saleOffer.isForSale,"not for sale");
         require(msg.value >= saleOffer.price, "price not met");
         require(saleOffer.seller == getOwner(tigerIndex), "seller no longer owns");
         tigerOwners[tigerIndex] = msg.sender;
-        tigersForSale[tigerIndex] = SaleOffer(false, address(0), 0, address(0));
+        tigersForSale[tigerIndex] = SaleOffer(false, address(0), 0);
         pendingWithdrawals[saleOffer.seller] += msg.value;
+        emit TigerSold(saleOffer.seller, msg.sender, tigerIndex, saleOffer.price);
     }
 
     
