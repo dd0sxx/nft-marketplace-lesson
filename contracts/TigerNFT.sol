@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity 0.8.2;
+import "hardhat/console.sol";
 /*
    NFT Contract along the lines of CryptoPunks. For the original see:
    https://github.com/larvalabs/cryptopunks/blob/master/contracts/CryptoPunksMarket.sol
@@ -20,7 +21,16 @@ contract TigerNFT {
     uint private startingPrice;
 
     // mapping from token ID to owner address
-    mapping(uint256 => address) private tigerOwners;
+    mapping(uint => address) private tigerOwners;
+
+    // mapping from owner address to number of tokens they own
+    mapping(address => uint) private balanceOf;
+
+    // mapping from owner address to list of IDs of all tokens they own
+    mapping(address => mapping(uint256 => uint256)) private tigersOwnedBy;
+
+    // mapping from token ID to its index position in the owner's tokens list
+    mapping(uint256 => uint256) private tigersOwnedByIndex;
 
     // tigers currently up for sale
     struct SaleOffer {
@@ -65,6 +75,11 @@ contract TigerNFT {
         }
     }
 
+    // get the number of tigers owned by the address
+    function getBalance(address owner) public view returns (uint) {
+        return balanceOf[owner ];
+    }
+
     // get the current owner of a token, unsold tokens belong to the artist
     function getOwner(uint tigerIndex) public view returns (address) {
         require(tigerIndex < totalSupply, "index out of range");
@@ -74,6 +89,13 @@ contract TigerNFT {
         }
         return owner;
     }
+
+    // get the ID of the index'th tiger belonging to owner (who must own at least index + 1 tigers)
+    function tigerByOwnerAndIndex(address owner, uint index) public view returns (uint) {
+        require(index < balanceOf[owner], "owner doesn't have that many tigers");
+        return tigersOwnedBy[owner][index];
+    }
+    
 
     // allow the current owner to put a tiger token up for sale
     function putUpForSale(uint tigerIndex, uint minSalePriceInWei) external {
@@ -92,6 +114,36 @@ contract TigerNFT {
         emit TigerWithdrawnFromSale(msg.sender, tigerIndex);
     }
 
+    // update ownership tracking for newly acquired tiger token
+    function updateTigerOwnership(uint tigerId, address newOwner, address previousOwner) private {
+        bool firstSale = tigerOwners[tigerId] == address(0);
+        tigerOwners[tigerId] = newOwner;
+        balanceOf[newOwner]++;
+        if (!firstSale) {
+            balanceOf[previousOwner]--;
+
+            // To prevent a gap in previousOwner's tokens array
+            // we store the last token in the index of the token to delete, and
+            // then delete the last slot (swap and pop).
+
+            uint lastTokenIndex = balanceOf[previousOwner];
+            uint tokenIndex = tigersOwnedByIndex[tigerId];
+
+            // When the token to delete is the last token, the swap operation is unnecessary
+            if (tokenIndex != lastTokenIndex) {
+                uint lastTokenId = tigersOwnedBy[previousOwner][lastTokenIndex];
+
+                tigersOwnedBy[previousOwner][tokenIndex] = lastTokenId; // Move the last token to the slot of the to-delete token
+                tigersOwnedByIndex[lastTokenId] = tokenIndex; // Update the moved token's index
+            }
+
+            delete tigersOwnedBy[previousOwner][lastTokenIndex];
+        }
+        uint newIndex = balanceOf[newOwner] - 1;
+        tigersOwnedBy[newOwner][newIndex] = tigerId;
+        tigersOwnedByIndex[tigerId] = newIndex;
+    }
+
     // allow someone to buy a tiger offered for sale to them
     function buyTiger(uint tigerIndex) external payable {
         require(tigerIndex < totalSupply, "index out of range");
@@ -99,7 +151,7 @@ contract TigerNFT {
         require(saleOffer.isForSale,"not for sale");
         require(msg.value >= saleOffer.price, "price not met");
         require(saleOffer.seller == getOwner(tigerIndex), "seller no longer owns");
-        tigerOwners[tigerIndex] = msg.sender;
+        updateTigerOwnership(tigerIndex, msg.sender, saleOffer.seller);
         tigersForSale[tigerIndex] = SaleOffer(false, address(0), 0);
         uint contractRoyalty = msg.value / 100;
         pendingWithdrawals[deployer] += contractRoyalty;

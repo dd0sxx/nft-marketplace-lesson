@@ -54,8 +54,35 @@ describe("TigerBuggyNFT contract", function () {
     })
 
     it("someone can buy a tiger that is for sale", async function () {
+        expect(await tiger.connect(alice).getBalance(bob.address)).to.equal(0)
         await tiger.connect(bob).buyTiger(13, {value:ethers.utils.parseEther("1")})
         expect(await tiger.connect(alice).getOwner(13)).to.equal(bob.address)
+        expect(await tiger.connect(alice).getBalance(bob.address)).to.equal(1)
+        expect(await tiger.connect(alice).tigerByOwnerAndIndex(bob.address, 0)).to.equal(13)
+    })
+
+    it("purchaser can resell a tiger", async function () {
+        await tiger.connect(bob).buyTiger(13, {value:ethers.utils.parseEther("1")})
+        expect(await tiger.getBalance(bob.address)).to.equal(1)
+        expect(await tiger.getOwner(13)).to.equal(bob.address)
+        expect(await tiger.tigerByOwnerAndIndex(bob.address, 0)).to.equal(13)
+        await tiger.connect(bob).putUpForSale(13, ethers.utils.parseEther("2"))
+        await tiger.connect(alice).buyTiger(13, {value:ethers.utils.parseEther("2")})
+        expect(await tiger.getBalance(bob.address)).to.equal(0)
+        expect(await tiger.getBalance(alice.address)).to.equal(1)
+        expect(await tiger.getOwner(13)).to.equal(alice.address)
+        expect(await tiger.tigerByOwnerAndIndex(alice.address, 0)).to.equal(13)
+    })
+
+    it("multiple tiger purchases can be tracked", async function () {
+        await tiger.connect(bob).buyTiger(3, {value:ethers.utils.parseEther("1")})
+        await tiger.connect(bob).buyTiger(13, {value:ethers.utils.parseEther("1")})
+        await tiger.connect(bob).buyTiger(23, {value:ethers.utils.parseEther("1")})
+        expect(await tiger.getBalance(bob.address)).to.equal(3)
+        expect(await tiger.getOwner(13)).to.equal(bob.address)
+        expect(await tiger.tigerByOwnerAndIndex(bob.address, 0)).to.equal(3)
+        expect(await tiger.tigerByOwnerAndIndex(bob.address, 1)).to.equal(13)
+        expect(await tiger.tigerByOwnerAndIndex(bob.address, 2)).to.equal(23)
     })
 
     it("tiger should show as no longer for sale after it's been bought", async function () {
