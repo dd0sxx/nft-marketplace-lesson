@@ -47,4 +47,13 @@ This project is designed for experienced software engineers who are in the early
   ```
 ### Acknowledgements
 
-This repository includes code from HeadlessUI by Tailwind Labs https://github.com/tailwindlabs/headlessui
+The contracts are based on the original CryptoPunks:
+ - https://github.com/larvalabs/cryptopunks/blob/master/contracts/CryptoPunksMarket.sol
+
+The contracts incorporate some ideas and code from the OpenZeppelin ERC721Enumerable contract:
+ - https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721Enumerable.sol
+ - https://docs.openzeppelin.com/contracts/2.x/api/token/erc721#ERC721Enumerable
+
+The front end DApp includes code from HeadlessUI by Tailwind Labs:
+ - https://github.com/tailwindlabs/headlessui
+
