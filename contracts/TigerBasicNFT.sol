@@ -4,6 +4,11 @@ pragma solidity 0.8.2;
 /*
    NFT Contract along the lines of CryptoPunks. For the original see:
    https://github.com/larvalabs/cryptopunks/blob/master/contracts/CryptoPunksMarket.sol
+
+   Incorporates some ideas and code from the OpenZeppelin ERC721Enumerable contract:
+
+   https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/extensions/ERC721Enumerable.sol
+   https://docs.openzeppelin.com/contracts/2.x/api/token/erc721#ERC721Enumerable
 */
 contract TigerBasicNFT {
 
