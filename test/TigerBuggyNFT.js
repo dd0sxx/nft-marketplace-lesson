@@ -85,6 +85,22 @@ describe("TigerBuggyNFT contract", function () {
         expect(await tiger.tigerByOwnerAndIndex(bob.address, 2)).to.equal(23)
     })
 
+    it("multiple tiger purchases and resales can be tracked", async function () {
+        await tiger.connect(bob).buyTiger(3, {value:ethers.utils.parseEther("1")})
+        await tiger.connect(bob).buyTiger(13, {value:ethers.utils.parseEther("1")})
+        await tiger.connect(bob).buyTiger(23, {value:ethers.utils.parseEther("1")})
+        await tiger.connect(bob).putUpForSale(3, ethers.utils.parseEther("2"))
+        await tiger.connect(bob).putUpForSale(13, ethers.utils.parseEther("2"))
+        await tiger.connect(alice).buyTiger(3, {value:ethers.utils.parseEther("2")})
+        await tiger.connect(alice).buyTiger(13, {value:ethers.utils.parseEther("2")})
+        expect(await tiger.getBalance(bob.address)).to.equal(1)
+        expect(await tiger.tigerByOwnerAndIndex(bob.address, 0)).to.equal(23)
+        await expect(tiger.tigerByOwnerAndIndex(bob.address, 1)).to.be.revertedWith("owner doesn't have that many tigers")
+        expect(await tiger.getBalance(alice.address)).to.equal(2)
+        expect(await tiger.tigerByOwnerAndIndex(alice.address, 0)).to.equal(3)
+        expect(await tiger.tigerByOwnerAndIndex(alice.address, 1)).to.equal(13)
+    })
+
     it("tiger should show as no longer for sale after it's been bought", async function () {
         await tiger.connect(bob).buyTiger(38, {value:ethers.utils.parseEther("1")})
         expect((await tiger.isForSale(38))[0]).to.equal(false)
