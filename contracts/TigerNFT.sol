@@ -132,9 +132,10 @@ contract TigerNFT {
             // When the token to delete is the last token, the swap operation is unnecessary
             if (tokenIndex != lastTokenIndex) {
                 uint lastTokenId = tigersOwnedBy[previousOwner][lastTokenIndex];
-
-                tigersOwnedBy[previousOwner][tokenIndex] = lastTokenId; // Move the last token to the slot of the to-delete token
-                tigersOwnedByIndex[lastTokenId] = tokenIndex; // Update the moved token's index
+                // Move the last token to the slot of the to-delete token
+                tigersOwnedBy[previousOwner][tokenIndex] = lastTokenId;
+                // Update the moved token's index
+                tigersOwnedByIndex[lastTokenId] = tokenIndex;
             }
 
             delete tigersOwnedBy[previousOwner][lastTokenIndex];
@@ -144,7 +145,7 @@ contract TigerNFT {
         tigersOwnedByIndex[tigerId] = newIndex;
     }
 
-    // allow someone to buy a tiger offered for sale to them
+    // allow someone to buy a tiger offered for sale
     function buyTiger(uint tigerIndex) external payable {
         require(tigerIndex < totalSupply, "index out of range");
         SaleOffer memory saleOffer = getSaleInfo(tigerIndex);
