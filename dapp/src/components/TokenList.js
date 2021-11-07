@@ -16,7 +16,6 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
                 a.push(token)
                 return a
             })
-            // setList(list.push(token))
             if (id === tokensPerPage) {
                 setList(a => {
                     return a.slice()
