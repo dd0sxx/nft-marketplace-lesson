@@ -74,9 +74,9 @@ contract TigerBuggyNFT {
     }        
     
     // allow anyone to see if a tiger is for sale and, if so, for how much
-    function isForSale(uint tigerIndex) external view returns (bool, uint) {
-        require(tigerIndex < totalSupply, "index out of range");
-        SaleOffer memory saleOffer = getSaleInfo(tigerIndex);
+    function isForSale(uint tigerId) external view returns (bool, uint) {
+        require(tigerId < totalSupply, "index out of range");
+        SaleOffer memory saleOffer = getSaleInfo(tigerId);
         if (saleOffer.isForSale) {
             return(true, saleOffer.price);
         }
@@ -85,11 +85,11 @@ contract TigerBuggyNFT {
 
     // tokens which have never been sold are for sale at the starting price,
     // all others are not unless the owner puts them up for sale
-    function getSaleInfo(uint tigerIndex) private view returns (SaleOffer memory saleOffer) {
-        if (tigerOwners[tigerIndex] == address(0)) {
+    function getSaleInfo(uint tigerId) private view returns (SaleOffer memory saleOffer) {
+        if (tigerOwners[tigerId] == address(0)) {
             saleOffer = SaleOffer(true, artist, startingPrice);
         } else {
-            saleOffer = tigersForSale[tigerIndex];
+            saleOffer = tigersForSale[tigerId];
         }
     }
 
@@ -99,9 +99,9 @@ contract TigerBuggyNFT {
     }
 
     // get the current owner of a token, unsold tokens belong to the artist
-    function getOwner(uint tigerIndex) public view returns (address) {
-        require(tigerIndex < totalSupply, "index out of range");
-        address owner = tigerOwners[tigerIndex];
+    function getOwner(uint tigerId) public view returns (address) {
+        require(tigerId < totalSupply, "index out of range");
+        address owner = tigerOwners[tigerId];
         if (owner == address(0)) {
             owner = artist;
         }
@@ -116,19 +116,19 @@ contract TigerBuggyNFT {
     
 
     // allow the current owner to put a tiger token up for sale
-    function putUpForSale(uint tigerIndex, uint minSalePriceInWei) external {
-        require(tigerIndex < totalSupply, "index out of range");
-        require(getOwner(tigerIndex) == msg.sender, "not owner");
-        tigersForSale[tigerIndex] = SaleOffer(true, msg.sender, minSalePriceInWei);
-        emit TigerForSale(msg.sender, tigerIndex, minSalePriceInWei);
+    function putUpForSale(uint tigerId, uint minSalePriceInWei) external {
+        require(tigerId < totalSupply, "index out of range");
+        require(getOwner(tigerId) == msg.sender, "not owner");
+        tigersForSale[tigerId] = SaleOffer(true, msg.sender, minSalePriceInWei);
+        emit TigerForSale(msg.sender, tigerId, minSalePriceInWei);
     }
 
     // allow the current owner to withdraw a tiger token from sale
-    function withdrawFromSale(uint tigerIndex) external {
-        require(tigerIndex < totalSupply, "index out of range");
-        require(getOwner(tigerIndex) == msg.sender, "not owner");
-        tigersForSale[tigerIndex] = SaleOffer(false, address(0), 0);
-        emit TigerWithdrawnFromSale(msg.sender, tigerIndex);
+    function withdrawFromSale(uint tigerId) external {
+        require(tigerId < totalSupply, "index out of range");
+        require(getOwner(tigerId) == msg.sender, "not owner");
+        tigersForSale[tigerId] = SaleOffer(false, address(0), 0);
+        emit TigerWithdrawnFromSale(msg.sender, tigerId);
     }
 
     // update ownership tracking for newly acquired tiger token
@@ -163,16 +163,16 @@ contract TigerBuggyNFT {
     }
 
     // allow someone to buy a tiger offered for sale
-    function buyTiger(uint tigerIndex) external payable {
-        require(tigerIndex < totalSupply, "index out of range");
-        SaleOffer memory saleOffer = getSaleInfo(tigerIndex);
+    function buyTiger(uint tigerId) external payable {
+        require(tigerId < totalSupply, "index out of range");
+        SaleOffer memory saleOffer = getSaleInfo(tigerId);
         require(saleOffer.isForSale,"not for sale");
         (uint contractRoyalty, uint artistRoyalty) = calculateRoyalties(msg.value);
         pendingWithdrawals[deployer] += contractRoyalty;
         pendingWithdrawals[artist] += artistRoyalty;
         pendingWithdrawals[saleOffer.seller] += msg.value;
-        updateTigerOwnership(tigerIndex, msg.sender, saleOffer.seller);
-        emit TigerSold(saleOffer.seller, msg.sender, tigerIndex, saleOffer.price);
+        updateTigerOwnership(tigerId, msg.sender, saleOffer.seller);
+        emit TigerSold(saleOffer.seller, msg.sender, tigerId, saleOffer.price);
     }
 
     // calculate the contract and artist royalties due on the sale amount
