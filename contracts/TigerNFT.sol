@@ -48,9 +48,9 @@ contract TigerNFT {
     // ether held by the contract on behalf of addresses that have interacted with it
     mapping (address => uint) public pendingWithdrawals;
 
-    event TigerForSale(address indexed seller, uint indexed tigerId, uint price);
-    event TigerSold(address indexed seller, address indexed buyer, uint indexed tigerId, uint price);
-    event TigerWithdrawnFromSale(address indexed seller, uint indexed tigerId);
+    event TigerForSale(uint indexed tigerId, uint price, address indexed seller);
+    event TigerBought(uint indexed tigerId, uint price, address indexed buyer);
+    event TigerWithdrawnFromSale(uint indexed tigerId, address indexed seller);
     
     // create the contract, artist is set here and never changes subsequently
     constructor(address _artist, uint _startingPrice) {
@@ -107,7 +107,7 @@ contract TigerNFT {
         require(tigerId < totalSupply, "index out of range");
         require(getOwner(tigerId) == msg.sender, "not owner");
         tigersForSale[tigerId] = SaleOffer(true, msg.sender, minSalePriceInWei);
-        emit TigerForSale(msg.sender, tigerId, minSalePriceInWei);
+        emit TigerForSale(tigerId, minSalePriceInWei, msg.sender);
     }
 
 
@@ -116,7 +116,7 @@ contract TigerNFT {
         require(tigerId < totalSupply, "index out of range");
         require(getOwner(tigerId) == msg.sender, "not owner");
         tigersForSale[tigerId] = SaleOffer(false, address(0), 0);
-        emit TigerWithdrawnFromSale(msg.sender, tigerId);
+        emit TigerWithdrawnFromSale(tigerId, msg.sender);
     }
 
     // update ownership tracking for newly acquired tiger token
@@ -164,7 +164,7 @@ contract TigerNFT {
         uint artistRoyalty = msg.value / 20;
         pendingWithdrawals[artist] += artistRoyalty;
         pendingWithdrawals[saleOffer.seller] += msg.value - (contractRoyalty + artistRoyalty);
-        emit TigerSold(saleOffer.seller, msg.sender, tigerId, saleOffer.price);
+        emit TigerBought(tigerId, saleOffer.price, msg.sender);
     }
 
     // allow participant to withdraw accumulated funds

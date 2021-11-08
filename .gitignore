@@ -2,9 +2,11 @@
 
 /artifacts
 /cache
-
-# dependencies
 /node_modules
+/dapp/node_modules
+/dapp/build
+.env
+
 /.pnp
 .pnp.js
 

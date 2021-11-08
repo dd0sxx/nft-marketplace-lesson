@@ -5,16 +5,90 @@ module.exports = [
           "internalType": "address",
           "name": "_artist",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_startingPrice",
+          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",
       "type": "constructor"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tigerId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "buyer",
+          "type": "address"
+        }
+      ],
+      "name": "TigerBought",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tigerId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "price",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
+        }
+      ],
+      "name": "TigerForSale",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tigerId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
+        }
+      ],
+      "name": "TigerWithdrawnFromSale",
+      "type": "event"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "tigerIndex",
+          "name": "tigerId",
           "type": "uint256"
         }
       ],
@@ -26,8 +100,27 @@ module.exports = [
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "getBalance",
+      "outputs": [
+        {
           "internalType": "uint256",
-          "name": "tigerIndex",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tigerId",
           "type": "uint256"
         }
       ],
@@ -46,7 +139,7 @@ module.exports = [
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "tigerIndex",
+          "name": "tigerId",
           "type": "uint256"
         }
       ],
@@ -89,7 +182,7 @@ module.exports = [
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "tigerIndex",
+          "name": "tigerId",
           "type": "uint256"
         },
         {
@@ -106,24 +199,25 @@ module.exports = [
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "tigerIndex",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "minSalePriceInWei",
-          "type": "uint256"
-        },
-        {
           "internalType": "address",
-          "name": "buyer",
+          "name": "owner",
           "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
         }
       ],
-      "name": "putUpForSaleToAddress",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "name": "tigerByOwnerAndIndex",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -150,11 +244,6 @@ module.exports = [
           "internalType": "uint256",
           "name": "price",
           "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "onlySellTo",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -177,7 +266,7 @@ module.exports = [
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "tigerIndex",
+          "name": "tigerId",
           "type": "uint256"
         }
       ],
