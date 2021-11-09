@@ -15,7 +15,7 @@ function TokenCard ({token, setCurrentlyBuying}) {
                  <div className="page-button" onClick={() => setCurrentlyBuying(token)}>Buy Now</div>
                     </div>
                     :
-                    <div className='price'>"not for sale"</div>
+                    <div className='price'>Not For Sale</div>
                 }
         </div>
     )
