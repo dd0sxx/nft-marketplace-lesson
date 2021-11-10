@@ -13,6 +13,7 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
     async function buyEventListener(tigerId, price, buyer) {
         console.log(`TigerBought tigerId ${tigerId}`)
         if (tigerId && buyer) {
+            window.buyer = buyer
             if (lastBoughtTigerId && tigerId.eq(lastBoughtTigerId) &&
                 lastTigerBuyer && buyer.equals(lastTigerBuyer)) {
                 return

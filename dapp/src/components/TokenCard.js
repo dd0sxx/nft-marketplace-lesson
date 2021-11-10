@@ -11,7 +11,8 @@ function TokenCard ({token, setCurrentlyBuying}) {
               token.processingPurchase ? (
                   <div className='page-button'>Processing, please wait...</div>
               )
-                  :(<div className='flex-centered'>
+                  :
+                  (<div className='flex-centered'>
                       <div style={{paddingRight: 5}}>price:</div>
                       <div className='price'>{ethers.utils.formatEther(token.price)}</div>
                       <div style={{backgroundImage: `url("${ethSVG}")`, backgroundRepeat: 'no', backgroundSize: 'contain', width: 20, height: 20}}/>
