@@ -24,7 +24,7 @@ function App() {
     window.ethereum.enable().then(provider = new ethers.providers.Web3Provider(window.ethereum, "rinkeby"))
     const signer = provider.getSigner()
     window.signer = signer
-    const nftAddr = '0x7ba2Dd984EB6a0EBBa08246A2b832E93394a7883'
+    const nftAddr = '0xDC04D8183a0C91c40E02dd5a0e06Ee6a2D25685F'
     const contract = new ethers.Contract(nftAddr, tigerNFTABI, provider);
     const rinkeby_chain = "0x4"
     const tokensPerPage = 12
@@ -64,9 +64,9 @@ function App() {
 
     useEffect(() => {connectToMetamask().catch(err => console.error(err))}, [])
 
-    useEffect(() => {
-        getWalletOfOwner().then(() => console.log(walletOfOwner)).catch(err => console.error(err))
-    }, [address])
+    // useEffect(() => {
+    //    getWalletOfOwner().then(() => console.log(walletOfOwner)).catch(err => console.error(err))
+    // }, [address])
 
     return (
             <div className="app">

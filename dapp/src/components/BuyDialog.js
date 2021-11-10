@@ -17,10 +17,14 @@ export default function BuyDialog({currentlyBuying, setCurrentlyBuying, contract
 
     async function buyToken() {
         await contract.connect(signer).buyTiger(currentlyBuying.id, {value: currentlyBuying.price})
-        closeModal()
+        currentlyBuying.processingPurchase = true
     }
     
-  return (
+    function buttonsEnabled() {
+        return currentlyBuying?.processingPurchase ? "false" : "true"
+    }
+
+    return (
       <Transition appear show={currentlyBuying !== null} as={Fragment}>
         <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto"onClose={closeModal}>
           <div className="min-h-screen px-4 text-center">
@@ -73,6 +77,7 @@ export default function BuyDialog({currentlyBuying, setCurrentlyBuying, contract
                     type="button"
                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                     onClick={buyToken}
+                    enabled={buttonsEnabled()}
                   >
                     Buy
                   </button>
@@ -80,6 +85,7 @@ export default function BuyDialog({currentlyBuying, setCurrentlyBuying, contract
                     type="button"
                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                     onClick={closeModal}
+                    enabled={buttonsEnabled()}
                   >
                     Cancel
                   </button>

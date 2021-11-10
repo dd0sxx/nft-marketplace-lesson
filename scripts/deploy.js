@@ -7,7 +7,7 @@ async function main() {
     console.log("Account balance:", (await deployer.getBalance()).toString());
 
     const TigerNFT = await ethers.getContractFactory("TigerNFT")
-    const tiger = await TigerNFT.deploy(deployer.address, ethers.utils.parseEther("1"))
+    const tiger = await TigerNFT.deploy(deployer.address, ethers.utils.parseEther("0.01"))
 
 
     console.log("TigerNFT address:", tiger.address);
