@@ -5,6 +5,8 @@ import '../style/profile.css'
 
 function Profile ({walletOfOwner, provider, address, contract}) {
 
+     console.log('walletOfOwner: ', walletOfOwner)
+
     return (
         <div className='profile'>
             {walletOfOwner.map(token => {

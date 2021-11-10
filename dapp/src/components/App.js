@@ -55,11 +55,13 @@ function App() {
     }
 
     const getWalletOfOwner = async () => {
-        for (let i = 0; i < 100; i++) {
-            if (await contract.getOwner(i) === address) {
-                setWalletOfOwner(walletOfOwner.push(i))
-            } 
-        }
+        console.log('meow')
+        let balance = await contract.getBalance(address)
+        console.log('woof', balance)
+        // for (let i = 0; i < balance; i++) {
+        //     let token = await contract.tigerByOwnerAndIndex(address, i)
+        //     setWalletOfOwner(walletOfOwner.push(token))
+        // }
     }
 
     useEffect(() => {connectToMetamask().catch(err => console.error(err))}, [])
