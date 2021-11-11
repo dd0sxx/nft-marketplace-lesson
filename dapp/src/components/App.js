@@ -71,22 +71,22 @@ function App() {
     // }, [address])
 
     return (
-            <div className="app">
-            <Header address={address} connect={connectToMetamask} setHomePageOpen={setHomePageOpen} setProfilePageOpen={setProfilePageOpen}/>
-            {   profilePageOpen && !homePageOpen ?
-                <Profile walletOfOwner={walletOfOwner} provider={provider} address={address} contract={contract}/>
+        <div className="app">
+        <Header address={address} connect={connectToMetamask} setHomePageOpen={setHomePageOpen} setProfilePageOpen={setProfilePageOpen}/>
+        {   profilePageOpen && !homePageOpen ?
+            <Profile walletOfOwner={walletOfOwner} provider={provider} address={address} contract={contract}/>
                 :
                 <div>
-                <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply} setCurrentlyBuying={setCurrentlyBuying}/>
-                <div className='flex-centered '>
-                <div className='page-button'>Page:</div>
-                {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 1)}}>Prev</div> : <></>}
-                {((page + 1) * tokensPerPage) < totalSupply ? <div className='page-button' onClick={() => {setPage(page + 1)}}>Next</div> : <></>}
-                </div>
-                <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
-                <BuyDialog currentlyBuying={currentlyBuying} setCurrentlyBuying={setCurrentlyBuying} contract={contract} address={address} signer={signer}/>
-                </div>
-            }
+            <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply} setCurrentlyBuying={setCurrentlyBuying}/>
+            <div className='flex-centered '>
+            <div className='page-button'>Page:</div>
+            {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 1)}}>Prev</div> : <></>}
+            {((page + 1) * tokensPerPage) < totalSupply ? <div className='page-button' onClick={() => {setPage(page + 1)}}>Next</div> : <></>}
+            </div>
+            <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
+            <BuyDialog currentlyBuying={currentlyBuying} setCurrentlyBuying={setCurrentlyBuying} contract={contract} address={address} signer={signer}/>
+            </div>
+        }
         </div>
     );
 }
