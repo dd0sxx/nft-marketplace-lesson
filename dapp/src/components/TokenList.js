@@ -21,7 +21,7 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
             lastBoughtTigerId = tigerId
             lastTigerBuyer = buyer
             setCurrentlyBuying(null)
-            await getPriceInfo()
+            await getPriceInfoFor(tigerId)
         }
     }
     
@@ -30,12 +30,12 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
         return () => contract.off("TigerBought", buyEventListener)
     }
     
-    useEffect(() => {handleBuyEventSubscription()}, [])
+    useEffect(() => {return handleBuyEventSubscription()}, [])
 
     async function getPriceInfoFor(id) {
         const tokenList = currentTokenList.slice()
         let isForSale, price
-        [isForSale, price] = await contract.isForSale(id)
+        ;[isForSale, price] = await contract.isForSale(id)
         let token = {id: id, isForSale: isForSale, price: price}
         tokenList[id] = token
         currentTokenList = tokenList
