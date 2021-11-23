@@ -6,7 +6,7 @@ let currentTokenList = []
 let lastBoughtTigerId
 let lastTigerBuyer
 
-function TokenList ({provider, address, contract, page, tokensPerPage, totalSupply, setCurrentlyBuying}) {
+function TokenList ({provider, address, contract, page, tokensPerPage, totalSupply, setCurrentlyBuying, walletOfOwner, profilePageOpen}) {
 
     const [loadedSoFar, setLoadedSoFar] = useState(0)
 
@@ -32,6 +32,7 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
     
     useEffect(() => {return handleBuyEventSubscription()}, [])
 
+ 
     async function getPriceInfoFor(id) {
         const tokenList = currentTokenList.slice()
         let isForSale, price
@@ -44,8 +45,12 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
     
     async function getPriceInfo() {
         setLoadedSoFar(0)
-        for (let id = 0; id < totalSupply; id++) {
-            await getPriceInfoFor(id)
+        if (profilePageOpen) {
+            walletOfOwner.forEach(async (id) => await getPriceInfoFor(id))
+        } else {
+            for (let id = 0; id < totalSupply; id++) {
+                await getPriceInfoFor(id)
+            }
         }
     }
 
