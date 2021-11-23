@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import { ethers } from 'ethers';
 import '../style/app.css';
 import Header from './Header.js';
-import Profile from './Profile.js';
 import TokenList from './TokenList.js';
 import tigerNFTABI from '../assets/TigerNFT'
 import ChainMsg from './Modal.js'
@@ -11,8 +10,6 @@ import BuyDialog from './BuyDialog.js'
 function App() {
 
     const [page, setPage] = useState(0)
-    const [profilePageOpen, setProfilePageOpen] = useState(false)
-    const [homePageOpen, setHomePageOpen] = useState(false)
     const [walletOfOwner, setWalletOfOwner] = useState([])
     const [address, setAddress] = useState()
     const [chainWarning, setChainWarning] = useState(false)
@@ -76,12 +73,9 @@ function App() {
 
     return (
         <div className="app">
-        <Header address={address} connect={connectToMetamask} setHomePageOpen={setHomePageOpen} setProfilePageOpen={setProfilePageOpen} />
-        {   profilePageOpen && !homePageOpen ?
-            <Profile walletOfOwner={walletOfOwner} provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply} setCurrentlyBuying={setCurrentlyBuying}/>
-                :
-                <div>
-            <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply} setCurrentlyBuying={setCurrentlyBuying}/>
+        <Header address={address} connect={connectToMetamask} />
+        <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply}
+        setCurrentlyBuying={setCurrentlyBuying} walletOfOwner={walletOfOwner}/>
             <div className='flex-centered '>
             <div className='page-button'>Page:</div>
             {page > 0 ? <div className='page-button' onClick={() => {setPage(page - 1)}}>Prev</div> : <></>}
@@ -90,9 +84,7 @@ function App() {
             <ChainMsg open={chainWarning} setOpen={setChainWarning}/>
             <BuyDialog currentlyBuying={currentlyBuying} setCurrentlyBuying={setCurrentlyBuying} contract={contract} address={address} signer={signer}/>
             </div>
-        }
-        </div>
-    );
-}
+        );
+    }
 
-export default App;
+    export default App;

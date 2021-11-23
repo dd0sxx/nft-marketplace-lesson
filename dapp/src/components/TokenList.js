@@ -6,7 +6,7 @@ let currentTokenList = []
 let lastBoughtTigerId
 let lastTigerBuyer
 
-function TokenList ({provider, address, contract, page, tokensPerPage, totalSupply, setCurrentlyBuying, walletOfOwner, profilePageOpen}) {
+function TokenList ({provider, address, contract, page, tokensPerPage, totalSupply, setCurrentlyBuying, walletOfOwner}) {
 
     const [loadedSoFar, setLoadedSoFar] = useState(0)
 
@@ -45,13 +45,10 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
     
     async function getPriceInfo() {
         setLoadedSoFar(0)
-        if (profilePageOpen) {
-            walletOfOwner.forEach(async (id) => await getPriceInfoFor(id))
-        } else {
-            for (let id = 0; id < totalSupply; id++) {
-                await getPriceInfoFor(id)
-            }
+        for (let id = 0; id < totalSupply; id++) {
+            await getPriceInfoFor(id)
         }
+
     }
 
     useEffect(() => {getPriceInfo()}, [])
