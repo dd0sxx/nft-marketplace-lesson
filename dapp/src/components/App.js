@@ -14,6 +14,7 @@ function App() {
     const [address, setAddress] = useState()
     const [chainWarning, setChainWarning] = useState(false)
     const [currentlyBuying, setCurrentlyBuying] = useState(null)
+    const [sortBy, setSortBy] = useState(0)
     
     const totalSupply = 100
 
@@ -25,6 +26,8 @@ function App() {
     const contract = new ethers.Contract(nftAddr, tigerNFTABI, provider);
     const rinkeby_chain = "0x4"
     const tokensPerPage = 12
+
+    const sortOptions = ['by id', 'price low to high', 'price high to low', 'by tokens owned', 'last sold']
 
     window.ethereum.on('chainChanged', handleChainChanged);
 
@@ -73,7 +76,7 @@ function App() {
 
     return (
         <div className="app">
-        <Header address={address} connect={connectToMetamask} />
+        <Header address={address} connect={connectToMetamask} sortOptions={sortOptions} setSortBy={setSortBy}/>
         <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply}
         setCurrentlyBuying={setCurrentlyBuying} walletOfOwner={walletOfOwner}/>
             <div className='flex-centered '>
