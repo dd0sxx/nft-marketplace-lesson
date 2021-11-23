@@ -25,9 +25,9 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
         }
     }
     
-    function handleBuyEventSubscription() {
-        contract.on("TigerBought", buyEventListener)
-        return () => contract.off("TigerBought", buyEventListener)
+    async function handleBuyEventSubscription () {
+        await contract.on("TigerBought", buyEventListener)
+        return async () => { await contract.off("TigerBought", buyEventListener)}
     }
     
     useEffect(() => {return handleBuyEventSubscription()}, [])

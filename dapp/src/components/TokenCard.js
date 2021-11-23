@@ -3,7 +3,7 @@ import ethSVG from '../assets/eth-symbol-virgil.svg'
 
 function TokenCard ({token, setCurrentlyBuying}) {
 
-    console.log(`token `, token)
+    // console.log(`token `, token)
     return (
         <div className='tokenCard'>
         <div className='title'>Tiger #{token.id}</div>

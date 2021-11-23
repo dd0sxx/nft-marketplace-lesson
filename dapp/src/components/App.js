@@ -56,25 +56,29 @@ function App() {
 
     const getWalletOfOwner = async () => {
         console.log('meow')
-        let balance = await contract.getBalance(address)
-        console.log('woof', balance)
-        // for (let i = 0; i < balance; i++) {
-        //     let token = await contract.tigerByOwnerAndIndex(address, i)
-        //     setWalletOfOwner(walletOfOwner.push(token))
-        // }
+        let balanceBN = await contract.getBalance(address)
+        let balance = Number(balanceBN)
+        let temp = [...walletOfOwner]
+        for (let i = 0; i < balance; i++) {
+            let token = await contract.tigerByOwnerAndIndex(address, i)
+            temp.push(token)
+        }
+        console.log('temp: ',temp)
+        await setWalletOfOwner(temp)
+        return walletOfOwner
     }
 
     useEffect(() => {connectToMetamask().catch(err => console.error(err))}, [])
 
-    // useEffect(() => {
-    //    getWalletOfOwner().then(() => console.log(walletOfOwner)).catch(err => console.error(err))
-    // }, [address])
+    useEffect(() => {
+        if (address) getWalletOfOwner().catch(err => console.error(err))
+    }, [address])
 
     return (
         <div className="app">
-        <Header address={address} connect={connectToMetamask} setHomePageOpen={setHomePageOpen} setProfilePageOpen={setProfilePageOpen}/>
+        <Header address={address} connect={connectToMetamask} setHomePageOpen={setHomePageOpen} setProfilePageOpen={setProfilePageOpen} />
         {   profilePageOpen && !homePageOpen ?
-            <Profile walletOfOwner={walletOfOwner} provider={provider} address={address} contract={contract}/>
+            <Profile walletOfOwner={walletOfOwner} provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply} setCurrentlyBuying={setCurrentlyBuying}/>
                 :
                 <div>
             <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply} setCurrentlyBuying={setCurrentlyBuying}/>
