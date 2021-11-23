@@ -6,7 +6,7 @@ let currentTokenList = []
 let lastBoughtTigerId
 let lastTigerBuyer
 
-function TokenList ({provider, address, contract, page, tokensPerPage, totalSupply, setCurrentlyBuying, walletOfOwner}) {
+function TokenList ({provider, address, contract, page, tokensPerPage, totalSupply, setCurrentlyBuying, walletOfOwner, sortBy}) {
 
     const [loadedSoFar, setLoadedSoFar] = useState(0)
 
@@ -45,9 +45,10 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
     
     async function getPriceInfo() {
         setLoadedSoFar(0)
-        for (let id = 0; id < totalSupply; id++) {
-            await getPriceInfoFor(id)
-        }
+            for (let id = 0; id < totalSupply; id++) {
+                await getPriceInfoFor(id)
+            }
+
 
     }
 
@@ -56,9 +57,26 @@ function TokenList ({provider, address, contract, page, tokensPerPage, totalSupp
     if (loadedSoFar > (page * tokensPerPage)) {
         return (<div className='tokenList'>
                 {
-                    currentTokenList.slice(page * tokensPerPage, page * tokensPerPage + tokensPerPage).map(token =>  {
-                        return <TokenCard key={token.id} token={token} setCurrentlyBuying={setCurrentlyBuying}/>
+                    sortBy === 0 ?
+                        currentTokenList.slice(page * tokensPerPage, page * tokensPerPage + tokensPerPage).map(token =>  {
+                            return <TokenCard key={token.id} token={token} setCurrentlyBuying={setCurrentlyBuying}/>
+                        })
+                    :
+                    sortBy === 1 ?
+                        <></>
+                    :
+                    sortBy === 2 ?
+                        <></>
+                    :
+                    sortBy === 3 ?
+                    walletOfOwner.slice(page * tokensPerPage, page * tokensPerPage + tokensPerPage).map(token =>  {
+                        return <TokenCard key={currentTokenList[Number(token)]} token={currentTokenList[Number(token)]} setCurrentlyBuying={setCurrentlyBuying}/>
                     })
+                    :
+                    sortBy === 4 ?
+                        <></>
+                    : 
+                        <></>
                 }
                 </div>)
     } else {

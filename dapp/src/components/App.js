@@ -77,7 +77,7 @@ function App() {
     return (
         <div className="app">
         <Header address={address} connect={connectToMetamask} sortOptions={sortOptions} setSortBy={setSortBy}/>
-        <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply}
+        <TokenList provider={provider} address={address} contract={contract} page={page} tokensPerPage={tokensPerPage} totalSupply={totalSupply} sortBy={sortBy}
         setCurrentlyBuying={setCurrentlyBuying} walletOfOwner={walletOfOwner}/>
             <div className='flex-centered '>
             <div className='page-button'>Page:</div>
